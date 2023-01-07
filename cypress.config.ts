@@ -2,6 +2,9 @@ import { defineConfig } from "cypress";
 
 export default defineConfig({
   e2e: {
+    env: {
+      API_BASE_URL: "https://localhost:8080/",
+    },
     setupNodeEvents: (on, config) => {
       const isDev = config.watchForFileChanges;
       const port = process.env.PORT ?? (isDev ? "3000" : "8811");
