@@ -1,16 +1,14 @@
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import clsx from "clsx";
 import { useState } from "react";
 import { useSprings, animated, to as interpolate } from "@react-spring/web";
 import { useDrag } from "@use-gesture/react";
 
 import type { PostWithImageAndStats } from "~/models/post.server";
 import { getPosts } from "~/models/post.server";
-
-function Number({ value }: { value: number }) {
-  return <span>{value.toLocaleString()}</span>;
-}
+import Number from "~/components/Number";
+import Post from "~/components/Post";
+import Stats from "~/components/Stats";
 
 const to = (i: number) => ({
   x: 0,
@@ -25,83 +23,6 @@ const trans = (r: number, s: number) =>
   `perspective(1500px) rotateX(30deg) rotateY(${
     r / 10
   }deg) rotateZ(${r}deg) scale(${s})`;
-
-interface PostProps {
-  post: PostWithImageAndStats;
-}
-
-interface StatsProps {
-  post: PostWithImageAndStats | null;
-}
-
-function Post({ post }: PostProps) {
-  return (
-    <>
-      <div className="relative">
-        <img className="drag-none w-full" src={post.image} alt={post.title} />
-        <h4 className="absolute bottom-0 left-0 m-0 w-full bg-gradient-to-t from-black p-2 text-2xl font-bold">
-          {post.title}
-        </h4>
-      </div>
-
-      <div className="overflow-y-auto px-4">
-        <p className="text-base text-black">{post.description}</p>
-      </div>
-    </>
-  );
-}
-
-function Stats({ post }: StatsProps) {
-  if (!post) {
-    return null;
-  }
-
-  return (
-    <div className="flex flex-col items-center justify-center gap-2 p-4">
-      <div>
-        What others chose for{" "}
-        <span
-          className={clsx(
-            "font-bold",
-            post.lockedUp ? "text-blue-dark" : "text-red"
-          )}
-        >
-          {post.title}
-        </span>
-        {"..."}
-      </div>
-      <div className="flex justify-center gap-4">
-        <div className="flex flex-col items-end gap-1 pt-2 text-right">
-          <div>Oh No!</div>
-          <div className="h-8 w-32 rounded bg-blue-dark" />
-          <div>
-            <Number value={post.passes} />
-          </div>
-        </div>
-        <div
-          className={clsx(
-            "relative h-32 w-32 overflow-hidden rounded border-4",
-            post.lockedUp ? "border-blue-dark" : "border-red"
-          )}
-        >
-          <img
-            className="absolute h-full w-full opacity-80"
-            src={post.lockedUp ? "/oh-no.svg" : "/ay-yo.svg"}
-            alt={post.lockedUp ? "Oh No" : "Ay Yo"}
-          />
-          <img src={post.image} alt={post.title} />
-        </div>
-        <div className="flex flex-col gap-1 pt-2">
-          <div>Ay Yo!</div>
-          <div className="h-8 w-32 rounded bg-red" />
-          <div>
-            <Number value={post.smashes} />
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
 
 export async function loader() {
   const page = await getPosts();
