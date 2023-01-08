@@ -1,4 +1,5 @@
 import clsx from "clsx";
+import { useSpring, animated, to as interpolate } from "@react-spring/web";
 
 import type { PostWithImageAndStats } from "~/models/post.server";
 import Number from "~/components/Number";
@@ -8,6 +9,21 @@ interface StatsProps {
 }
 
 function Stats({ post }: StatsProps) {
+  const maxWidth = 100;
+  const smashes = post?.smashes ?? 0;
+  const passes = post?.passes ?? 0;
+  const totalVotes = post?.totalVotes ?? 1;
+
+  const passesStyle = useSpring({
+    from: { width: 0 },
+    to: { width: (passes / totalVotes) * maxWidth },
+  });
+
+  const smashesStyle = useSpring({
+    from: { width: 0 },
+    to: { width: (smashes / totalVotes) * maxWidth },
+  });
+
   if (!post) {
     return null;
   }
@@ -26,10 +42,13 @@ function Stats({ post }: StatsProps) {
         </span>
         {"..."}
       </div>
-      <div className="flex justify-center gap-4">
-        <div className="flex flex-col items-end gap-1 pt-2 text-right">
+      <div className="flex w-full justify-center gap-4">
+        <div className="flex flex-1 flex-col items-end gap-1 pt-2 text-right">
           <div>Oh No!</div>
-          <div className="h-8 w-32 rounded bg-blue-dark" />
+          <animated.div
+            style={passesStyle}
+            className="h-8 rounded bg-blue-dark"
+          />
           <div>
             <Number value={post.passes} />
           </div>
@@ -47,9 +66,9 @@ function Stats({ post }: StatsProps) {
           />
           <img src={post.image} alt={post.title} />
         </div>
-        <div className="flex flex-col gap-1 pt-2">
+        <div className="flex flex-1 flex-col gap-1 pt-2">
           <div>Ay Yo!</div>
-          <div className="h-8 w-32 rounded bg-red" />
+          <animated.div style={smashesStyle} className="h-8 rounded bg-red" />
           <div>
             <Number value={post.smashes} />
           </div>

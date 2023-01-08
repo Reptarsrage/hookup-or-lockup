@@ -15,6 +15,7 @@ export interface PostWithImageAndStats {
   image: string;
   smashes: number;
   passes: number;
+  totalVotes: number;
 }
 
 export interface Page {
@@ -45,6 +46,8 @@ export async function getPosts(
     (media, i) => {
       const post = posts.find((post) => post.id === media.postId);
       const stat = stats.find((post) => post.id === media.postId);
+      const smashes = stat?.smashes ?? 0;
+      const passes = stat?.passes ?? 0;
 
       invariant(post, "Post not found");
 
@@ -54,8 +57,9 @@ export async function getPosts(
         description: convert(post.description),
         lockedUp: post.lockedUp,
         image: media.sourceUrl,
-        smashes: stat?.smashes ?? 0,
-        passes: stat?.passes ?? 0,
+        smashes,
+        passes,
+        totalVotes: passes + smashes,
       };
     }
   );
