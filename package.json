@@ -36,6 +36,7 @@
     "@remix-run/serve": "^1.9.0",
     "@remix-run/server-runtime": "^1.9.0",
     "@use-gesture/react": "^10.2.23",
+    "axios": "^1.2.2",
     "bcryptjs": "^2.4.3",
     "clsx": "^1.2.1",
     "html-to-text": "^9.0.3",
