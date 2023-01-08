@@ -1,5 +1,6 @@
 import Axios from "axios";
 import type { AxiosInstance } from "axios";
+import invariant from "tiny-invariant";
 
 // Wordpress API responses
 interface WordpressHTMLContent {
@@ -84,8 +85,15 @@ export async function fetchPosts(
       lockedUp: categories.includes(JAIL_CATEGORY),
     })
   );
-  const total = parseInt(response.headers["x-wp-total"], 10);
-  const totalPages = parseInt(response.headers["x-wp-totalpages"], 10);
+
+  const headersTotal = response.headers["x-wp-total"];
+  const headersTotalPages = response.headers["x-wp-totalpages"];
+
+  invariant(headersTotal, "Missing header: x-wp-total");
+  invariant(headersTotalPages, "Missing header: x-wp-totalpages");
+
+  const total = parseInt(headersTotal, 10);
+  const totalPages = parseInt(headersTotalPages, 10);
   return { total, totalPages, posts };
 }
 
