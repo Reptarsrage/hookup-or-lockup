@@ -1,11 +1,11 @@
 import { json } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { useFetcher, useLoaderData, useSubmit } from "@remix-run/react";
 import { useState } from "react";
 import { useSprings, animated, to as interpolate } from "@react-spring/web";
 import { useDrag } from "@use-gesture/react";
 
 import type { PostWithImageAndStats } from "~/models/post.server";
-import { getPosts } from "~/models/post.server";
+import { getPosts, pass, smash } from "~/models/post.server";
 import Number from "~/components/Number";
 import Post from "~/components/Post";
 import Stats from "~/components/Stats";
@@ -30,6 +30,8 @@ export async function loader() {
 }
 
 export default function GamePage() {
+  const fetcher = useFetcher();
+
   const { page } = useLoaderData<typeof loader>();
   const { posts, total } = page;
 
@@ -68,6 +70,15 @@ export default function GamePage() {
       idx = posts.indexOf(last[last.length - 1]);
     }
 
+    posts[idx].smashes++;
+    fetcher.submit(
+      {},
+      {
+        method: "patch",
+        action: `/smash/${posts[idx].id}`,
+      }
+    );
+
     setCount(Math.min(count + 1, total));
     gone.add(posts[idx].id);
     setPrevious(posts[idx]);
@@ -79,6 +90,15 @@ export default function GamePage() {
       const last = posts.filter((post) => !gone.has(post.id));
       idx = posts.indexOf(last[last.length - 1]);
     }
+
+    posts[idx].passes++;
+    fetcher.submit(
+      {},
+      {
+        method: "patch",
+        action: `/pass/${posts[idx].id}`,
+      }
+    );
 
     setCount(Math.min(count + 1, total));
     gone.add(posts[idx].id);
