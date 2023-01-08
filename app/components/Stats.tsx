@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { useSpring, animated, to as interpolate } from "@react-spring/web";
+import { useSpring, animated } from "@react-spring/web";
 
 import type { PostWithImageAndStats } from "~/models/post.server";
 import Number from "~/components/Number";
