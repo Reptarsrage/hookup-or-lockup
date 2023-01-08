@@ -40,6 +40,9 @@ export default function GamePage() {
   const [count, setCount] = useState(1);
   const [gone] = useState(() => new Set<number>()); // The set flags all the cards that are flicked out
 
+  const [activeIdx, setActiveIdx] = useState(-1);
+  const [decision, setDecision] = useState(0);
+
   function update(xDir = 0, idx = 0, active = false, mx = 0, vx = 0) {
     api.start((i) => {
       if (idx !== i) return; // We're only interested in changing spring-data for the current spring
@@ -47,6 +50,15 @@ export default function GamePage() {
       const x = isGone ? (200 + window.innerWidth) * xDir : active ? mx : 0; // When a card is gone it flys out left or right, otherwise goes back to zero
       const rot = mx / 100 + (isGone ? xDir * 10 * vx : 0); // How much the card tilts, flicking it harder makes it rotate faster
       const scale = active ? 1.1 : 1; // Active cards lift up a bit
+
+      if (active) {
+        setActiveIdx(i);
+        setDecision(Math.max(-1, Math.min(1, mx / (window.innerWidth / 3))));
+      } else if (!isGone) {
+        setActiveIdx(-1);
+        setDecision(0);
+      }
+
       return {
         x,
         rot,
@@ -60,6 +72,7 @@ export default function GamePage() {
       setTimeout(() => {
         gone.clear();
         setCount(1);
+        setDecision(0);
         api.start((i) => to(i));
       }, 600);
   }
@@ -79,6 +92,7 @@ export default function GamePage() {
       }
     );
 
+    setDecision(1);
     setCount(Math.min(count + 1, total));
     gone.add(posts[idx].id);
     setPrevious(posts[idx]);
@@ -100,6 +114,7 @@ export default function GamePage() {
       }
     );
 
+    setDecision(-1);
     setCount(Math.min(count + 1, total));
     gone.add(posts[idx].id);
     setPrevious(posts[idx]);
@@ -156,7 +171,7 @@ export default function GamePage() {
               }}
               className="flex touch-none select-none flex-col gap-2 overflow-hidden rounded-xl bg-pink shadow-lg will-change-transform"
             >
-              <Post post={posts[i]} />
+              <Post post={posts[i]} decision={activeIdx === i ? decision : 0} />
             </animated.div>
           </animated.div>
         ))}
