@@ -69,8 +69,13 @@ export async function getPosts(
   };
 }
 
-export async function patchSmash(id: Post["id"]) {
-  return prisma.post.update({
+export async function hasPost(id: Post["id"]) {
+  const post = await prisma.post.findFirst({ where: { id } });
+  return !!post;
+}
+
+export async function smash(id: Post["id"]) {
+  return await prisma.post.update({
     where: { id },
     data: {
       smashes: {
@@ -80,8 +85,8 @@ export async function patchSmash(id: Post["id"]) {
   });
 }
 
-export async function patchPass(id: Post["id"]) {
-  return prisma.post.update({
+export async function pass(id: Post["id"]) {
+  return await prisma.post.update({
     where: { id },
     data: {
       passes: {
