@@ -8,11 +8,19 @@ interface PostProps {
 function Post({ post, decision }: PostProps) {
   return (
     <>
-      <div className="relative">
-        <img className="drag-none w-full" src={post.image} alt={post.title} />
+      <div className="relative flex-1">
+        {/* Pic */}
+        <div
+          className="h-full w-full bg-cover bg-top bg-no-repeat"
+          style={{ backgroundImage: `url("${post.image}")` }}
+        />
+
+        {/* Name */}
         <h4 className="absolute bottom-0 left-0 m-0 w-full bg-gradient-to-t from-black p-2 text-2xl font-bold">
           {post.title}
         </h4>
+
+        {/* Oh No! */}
         {decision < 0 && (
           <div
             className="absolute top-0 left-0 flex h-full w-full flex-col items-center justify-center"
@@ -22,6 +30,8 @@ function Post({ post, decision }: PostProps) {
             <span className="text-4xl font-bold text-blue-dark">Oh No!</span>
           </div>
         )}
+
+        {/* Ay Yo! */}
         {decision > 0 && (
           <div
             className="absolute top-0 left-0 flex h-full w-full flex-col items-center justify-center"
@@ -33,7 +43,8 @@ function Post({ post, decision }: PostProps) {
         )}
       </div>
 
-      <div className="overflow-y-auto px-4">
+      {/* Description */}
+      <div className="max-h-40 overflow-y-auto px-4">
         <p className="text-base text-black">{post.description}</p>
       </div>
     </>

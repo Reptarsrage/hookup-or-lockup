@@ -10,19 +10,21 @@ import Number from "~/components/Number";
 import Post from "~/components/Post";
 import Stats from "~/components/Stats";
 
+const trans = (r: number, s: number) => `rotate(${r}deg) scale(${s})`;
+const from = (_i: number) => ({
+  x: 0,
+  rot: 0,
+  scale: 1.5,
+  y: -1000,
+  opacity: 0,
+});
 const to = (i: number) => ({
   x: 0,
   y: i * -4,
   scale: 1,
-  rot: -10 + Math.random() * 20,
+  rot: -5 + Math.random() * 10,
   delay: i * 100,
 });
-
-const from = (_i: number) => ({ x: 0, rot: 0, scale: 1.5, y: -1000 });
-const trans = (r: number, s: number) =>
-  `perspective(1500px) rotateX(30deg) rotateY(${
-    r / 10
-  }deg) rotateZ(${r}deg) scale(${s})`;
 
 export async function loader() {
   const page = await getPosts();
@@ -153,12 +155,22 @@ export default function GamePage() {
         Viewing <Number value={count} /> of <Number value={total} />
       </div>
 
-      <div className="relative flex flex-1 items-center justify-center overflow-hidden">
+      <div
+        className="relative flex flex-1 items-center justify-center overflow-hidden"
+        style={{ minHeight: 500 }}
+      >
         {props.map(({ x, y, rot, scale }, i) => (
           <animated.div
             className="absolute flex items-center justify-center will-change-transform"
             key={i}
-            style={{ x, y, height: 500, width: 300 }}
+            style={{
+              x,
+              y,
+              width: "45vh",
+              height: "85vh",
+              maxWidth: 300,
+              maxHeight: 500,
+            }}
           >
             <animated.div
               {...bind(i)}
@@ -167,7 +179,7 @@ export default function GamePage() {
                 width: "45vh",
                 height: "85vh",
                 maxWidth: 300,
-                maxHeight: 570,
+                maxHeight: 500,
               }}
               className="flex touch-none select-none flex-col gap-2 overflow-hidden rounded-xl bg-pink shadow-lg will-change-transform"
             >
@@ -193,7 +205,7 @@ export default function GamePage() {
         </button>
       </div>
 
-      <div className="h-48">
+      <div className="h-48 max-sm:hidden">
         <Stats post={previous} />
       </div>
     </div>
