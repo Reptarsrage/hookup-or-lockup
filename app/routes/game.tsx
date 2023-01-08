@@ -1,11 +1,11 @@
 import { json } from "@remix-run/node";
-import { useFetcher, useLoaderData, useSubmit } from "@remix-run/react";
+import { useFetcher, useLoaderData } from "@remix-run/react";
 import { useState } from "react";
 import { useSprings, animated, to as interpolate } from "@react-spring/web";
 import { useDrag } from "@use-gesture/react";
 
 import type { PostWithImageAndStats } from "~/models/post.server";
-import { getPosts, pass, smash } from "~/models/post.server";
+import { getPosts } from "~/models/post.server";
 import Number from "~/components/Number";
 import Post from "~/components/Post";
 import Stats from "~/components/Stats";

@@ -42,12 +42,17 @@ export async function getPosts(
   ]);
 
   // Combine
+  const notFound = new Set<number>();
   const postsWithImageAndStats: PostWithImageAndStats[] = medias.map(
-    (media, i) => {
+    (media) => {
       const post = posts.find((post) => post.id === media.postId);
       const stat = stats.find((post) => post.id === media.postId);
       const smashes = stat?.smashes ?? 0;
       const passes = stat?.passes ?? 0;
+
+      if (!stat) {
+        notFound.add(media.postId);
+      }
 
       invariant(post, "Post not found");
 
@@ -62,6 +67,19 @@ export async function getPosts(
         totalVotes: passes + smashes,
       };
     }
+  );
+
+  // Add missing posts to db
+  await Promise.all(
+    [...notFound].map((id) =>
+      prisma.post.create({
+        data: {
+          id,
+          smashes: 0,
+          passes: 0,
+        },
+      })
+    )
   );
 
   return {
