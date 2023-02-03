@@ -1,7 +1,29 @@
 {
-  "name": "hookup-or-lookup-4a73",
+  "name": "hookup-or-lockup",
+  "productName": "Hookup or Lockup",
   "private": true,
   "sideEffects": false,
+  "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/reptarsrage/hookup-or-lockup.git"
+  },
+  "author": {
+    "name": "Reptarsrage",
+    "email": "reptarsrage@gmail.com",
+    "url": "https://github.com/reptarsrage"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/reptarsrage/hookup-or-lockup/issues"
+  },
+  "keywords": [
+    "vite",
+    "react",
+    "remix",
+    "typescript"
+  ],
+  "homepage": "https://github.com/reptarsrage/hookup-or-lockup#readme",
   "scripts": {
     "build": "run-s build:*",
     "build:css": "npm run generate:css -- --minify",
