@@ -1,4 +1,4 @@
-# Hookup or Lookup
+# Hookup or Lockup
 
 ## What's in the stack
 
@@ -13,12 +13,8 @@
 - Code formatting with [Prettier](https://prettier.io)
 - Linting with [ESLint](https://eslint.org)
 - Static Types with [TypeScript](https://typescriptlang.org)
-
-## Quickstart
-
-Click this button to create a [Gitpod](https://gitpod.io) workspace with the project set up and Fly pre-installed
-
-[![Gitpod Ready-to-Code](https://img.shields.io/badge/Gitpod-Ready--to--Code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/remix-run/indie-stack/tree/main)
+- Automatic changelog and versioning using [Conventional Commits](https://www.conventionalcommits.org/)
+- Git hooks using [husky](https://typicode.github.io/husky/#/) and [lint-staged](https://github.com/okonet/lint-staged#readme)
 
 ## Development
 
@@ -130,3 +126,11 @@ This project uses ESLint for linting. That is configured in `.eslintrc.js`.
 ### Formatting
 
 We use [Prettier](https://prettier.io/) for auto-formatting in this project. It's recommended to install an editor plugin (like the [VSCode Prettier plugin](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)) to get auto-formatting on save. There's also a `npm run format` script you can run to format all files in the project.
+
+### Releasing
+
+1. Run `npm run release` to run the semver release process
+2. Run `git push --follow-tags origin <branch>`
+3. Craft a new _draft_ release on GitHub with the tag created in Step 1
+4. Create a PR and merge changes
+5. Publish the GitHub release
