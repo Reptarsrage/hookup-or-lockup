@@ -27,7 +27,9 @@ function Post({ post, decision }: PostProps) {
             style={{ opacity: Math.abs(decision) }}
           >
             <img width="128" height="128" src="/oh-no.svg" alt="Oh No" />
-            <span className="text-4xl font-bold text-blue-dark">Oh No!</span>
+            <span className="text-4xl font-bold uppercase text-blue-dark">
+              Oh No!
+            </span>
           </div>
         )}
 
@@ -38,7 +40,9 @@ function Post({ post, decision }: PostProps) {
             style={{ opacity: Math.abs(decision) }}
           >
             <img width="128" height="128" src="/ay-yo.svg" alt="Ay Yo" />
-            <span className="text-4xl font-bold text-red">Ay Yo!</span>
+            <span className="text-4xl font-bold uppercase text-red">
+              Ay Yo!
+            </span>
           </div>
         )}
       </div>
