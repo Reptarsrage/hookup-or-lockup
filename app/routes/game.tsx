@@ -9,8 +9,7 @@ import { getPosts } from "~/models/post.server";
 import Number from "~/components/Number";
 import Post from "~/components/Post";
 
-//
-const PAGE_SIZE = 3;
+const PAGE_SIZE = 10;
 
 /**
  * Remix loader function.
