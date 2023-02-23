@@ -20,7 +20,7 @@ type ResultsProps = {
 };
 
 function Results({ onGoNext: closeResults, post, decision }: ResultsProps) {
-  const [innerHeight, innerWidth] = useSsrCompatible(useWindowSize(), [0, 0]);
+  const [innerWidth, innerHeight] = useSsrCompatible(useWindowSize(), [0, 0]);
   const [reveal, setShowConfetti] = React.useState(false);
 
   // Spring for card shake & grow
@@ -89,6 +89,7 @@ function Results({ onGoNext: closeResults, post, decision }: ResultsProps) {
         />
       )}
 
+      {/* correct/incorrect header */}
       <header className={revealed("flex flex-col items-center")}>
         <h1 className="text-5xl">{isCorrect ? "Correct" : "Incorrect"}!</h1>
         <h4 className="text-xl">
@@ -99,34 +100,16 @@ function Results({ onGoNext: closeResults, post, decision }: ResultsProps) {
         </h4>
       </header>
 
-      <div
-        className={revealed(
-          "absolute top-1/2 left-1/2 -z-10 flex -translate-x-1/2 -translate-y-1/2 items-center justify-center overflow-hidden rounded-full",
-          true
-        )}
-        style={{
-          width: size,
-          height: size,
-          backgroundImage: "radial-gradient(#a8a6f5, #0b0a26, #0b0a26)",
-        }}
-      >
-        <div
-          className="animate-[spin_10s_linear_infinite] rounded-full bg-cover bg-center bg-no-repeat"
-          style={{
-            width: size,
-            height: size,
-            backgroundImage: "url('/rays.svg')",
-          }}
-        ></div>
-      </div>
-
+      {/* main content */}
       <main className="flex flex-1 flex-col items-center justify-center">
         <animated.div
           className="relative will-change-transform"
           style={growStyle}
         >
+          {/* stats */}
           <Stats post={post} shown={reveal} />
 
+          {/* fly-in & splat icon */}
           <animated.div
             className="absolute top-0 left-0 flex h-full w-full items-center justify-center"
             style={{
@@ -138,16 +121,18 @@ function Results({ onGoNext: closeResults, post, decision }: ResultsProps) {
             }}
           >
             <div className={revealed(undefined, true)}>
-              {isLockedUp ? (
-                <img width="128" height="128" src="/oh-no.svg" alt="Oh No" />
-              ) : (
-                <img width="128" height="128" src="/ay-yo.svg" alt="Ay Yo" />
-              )}
+              <img
+                width="128"
+                height="128"
+                src={isLockedUp ? "/oh-no.svg" : "/ay-yo.svg"}
+                alt={isLockedUp ? "Oh No" : "Ay Yo"}
+              />
             </div>
           </animated.div>
         </animated.div>
       </main>
 
+      {/* next button */}
       <footer className={revealed("flex flex-col items-center")}>
         <button
           disabled={!open}
