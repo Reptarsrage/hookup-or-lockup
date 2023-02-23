@@ -113,6 +113,7 @@ export default function GamePage() {
 
   const isEnd = index >= total - 1;
   const isLoading = fetcher.state === "loading" && index >= posts.length;
+  const post = posts[index];
 
   // TODO: design a game over screen
   if (isEnd) {
@@ -129,11 +130,11 @@ export default function GamePage() {
         open={showConfirm}
         onConfirmed={onConfirmed}
         decision={decision}
-        post={posts[index]}
+        post={post}
       />
 
       {showResults && (
-        <Results onGoNext={onGoNext} decision={decision} post={posts[index]} />
+        <Results onGoNext={onGoNext} decision={decision} post={post} />
       )}
 
       {showGame && (
@@ -142,7 +143,7 @@ export default function GamePage() {
           index={index}
           total={total}
           onDecisionMade={onDecisionMade}
-          post={posts[index]}
+          post={post}
         />
       )}
     </div>
