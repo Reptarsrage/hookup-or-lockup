@@ -12,6 +12,8 @@ module.exports = {
       red: "#f20505",
       "pink-light": "#ffa9a1",
       "red-dark": "#6b2d28",
+      gray: "#8f9cb5",
+      "gray-light": "#a5afc3",
     },
     fontFamily: {
       sans: ["Poppins", "sans-serif"],
