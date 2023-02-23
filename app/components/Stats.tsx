@@ -3,6 +3,7 @@ import clsx from "clsx";
 import type { PostWithImageAndStats } from "~/models/post.server";
 import Number from "~/components/Number";
 import { Graph } from "./Graph";
+import { useWindowSize } from "@react-hook/window-size";
 
 interface StatsProps {
   post: PostWithImageAndStats;
@@ -17,7 +18,9 @@ export interface GraphProps {
 }
 
 function Stats({ post, shown }: StatsProps) {
-  const maxWidth = 128;
+  const [innerWidth] = useWindowSize();
+
+  const maxWidth = Math.min(256, Math.max(64, Math.floor(innerWidth / 3)));
   const smashes = post.smashes;
   const passes = post.passes;
   const totalVotes = post.totalVotes;
@@ -69,14 +72,17 @@ function Stats({ post, shown }: StatsProps) {
         {/* Profile image */}
         <div
           className={clsx(
-            "relative h-32 w-32 overflow-hidden rounded border-4",
-            shown && (post.lockedUp ? "border-blue-dark" : "border-red")
+            "relative overflow-hidden rounded border-4",
+            shown && (post.lockedUp ? "border-blue-light" : "border-red")
           )}
+          style={{
+            width: maxWidth,
+            height: maxWidth,
+          }}
         >
-          <img
-            className="h-full w-full object-cover"
-            src={post.image}
-            alt={post.title}
+          <div
+            className="h-full w-full bg-cover bg-top bg-no-repeat"
+            style={{ backgroundImage: `url("${post.image}")` }}
           />
         </div>
 

@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 
 import { getPosts } from "~/models/post.server";
 import ConfirmModal from "~/components/ConfirmModal";
-import Game from "~/components/Choose";
+import Game from "~/components/Game";
 import Results from "~/components/Results";
 
 const PAGE_SIZE = 10;
@@ -101,6 +101,14 @@ export default function GamePage() {
         action,
       }
     );
+
+    // Update post stats
+    post.totalVotes++;
+    if (decision === 1) {
+      post.smashes++;
+    } else {
+      post.passes++;
+    }
 
     setShowResults(true);
   }
