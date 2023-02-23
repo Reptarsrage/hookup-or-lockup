@@ -94,7 +94,7 @@ function Results({ onGoNext: closeResults, post, decision }: ResultsProps) {
         <h1 className="text-5xl">{isCorrect ? "Correct" : "Incorrect"}!</h1>
         <h4 className="text-xl">
           {post.title} is
-          <b className={clsx(isLockedUp ? "text-blue-dark" : "text-red")}>
+          <b className={clsx(isLockedUp ? "text-blue-light" : "text-red")}>
             {isLockedUp ? " in jail " : " not in jail"}
           </b>
         </h4>
@@ -110,25 +110,27 @@ function Results({ onGoNext: closeResults, post, decision }: ResultsProps) {
           <Stats post={post} shown={reveal} />
 
           {/* fly-in & splat icon */}
-          <animated.div
-            className="absolute top-0 left-0 flex h-full w-full items-center justify-center"
-            style={{
-              ...flyInStyle,
-              scale: splatStyle.x.to({
-                range: [0, 0.95, 1],
-                output: [0.9, 1.4, 1],
-              }),
-            }}
-          >
-            <div className={revealed(undefined, true)}>
-              <img
-                width="128"
-                height="128"
-                src={isLockedUp ? "/oh-no.svg" : "/ay-yo.svg"}
-                alt={isLockedUp ? "Oh No" : "Ay Yo"}
-              />
-            </div>
-          </animated.div>
+          {!reveal && (
+            <animated.div
+              className="absolute top-0 left-0 flex h-full w-full items-center justify-center"
+              style={{
+                ...flyInStyle,
+                scale: splatStyle.x.to({
+                  range: [0, 0.95, 1],
+                  output: [0.9, 1.4, 1],
+                }),
+              }}
+            >
+              <div className={revealed(undefined, true)}>
+                <img
+                  width="128"
+                  height="128"
+                  src={isLockedUp ? "/oh-no.svg" : "/ay-yo.svg"}
+                  alt={isLockedUp ? "Oh No" : "Ay Yo"}
+                />
+              </div>
+            </animated.div>
+          )}
         </animated.div>
       </main>
 

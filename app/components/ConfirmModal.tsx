@@ -16,10 +16,9 @@ function ConfirmModal({
   decision,
 }: ConfirmModalProps) {
   const modalTransitions = useTransition(open, {
-    keys: null,
-    from: { y: -100, opacity: 0 },
-    enter: { y: 0, opacity: 1 },
-    leave: { y: -100, opacity: 0 },
+    from: { opacity: 0 },
+    enter: { opacity: 1 },
+    leave: { opacity: 0 },
   });
 
   function onCancelled() {
@@ -53,14 +52,14 @@ function ConfirmModal({
                     You guessed {post.title} is
                     <b
                       className={clsx(
-                        decision < 0 ? "text-blue-dark" : "text-red"
+                        decision < 0 ? "text-blue-light" : "text-red"
                       )}
                     >
                       {decision > 0 ? " not in jail" : " in jail "}
                     </b>
                   </div>
                   <div
-                    className="mx-auto my-8 h-32 w-32 rounded-full bg-cover bg-center bg-no-repeat"
+                    className="mx-auto my-8 h-48 w-48 rounded-full bg-cover bg-top bg-no-repeat"
                     style={{ backgroundImage: `url("${post.image}")` }}
                   />
                   <div className="text-center text-xl">Is that correct?</div>
