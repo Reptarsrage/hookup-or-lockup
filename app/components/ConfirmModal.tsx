@@ -6,17 +6,15 @@ type ConfirmModalProps = {
   open: boolean;
   decision: number;
   post: PostWithImageAndStats;
-  closeModal: (confirmed: boolean) => void;
+  onConfirmed: (confirmed: boolean) => void;
 };
 
-function ConfirmModal({ open, closeModal, post, decision }: ConfirmModalProps) {
-  const bgTransitions = useTransition(open, {
-    keys: null,
-    from: { opacity: 0 },
-    enter: { opacity: 1 },
-    leave: { opacity: 0 },
-  });
-
+function ConfirmModal({
+  open,
+  onConfirmed: closeModal,
+  post,
+  decision,
+}: ConfirmModalProps) {
   const modalTransitions = useTransition(open, {
     keys: null,
     from: { y: -100, opacity: 0 },
@@ -34,16 +32,6 @@ function ConfirmModal({ open, closeModal, post, decision }: ConfirmModalProps) {
 
   return (
     <>
-      {bgTransitions(
-        (style, item) =>
-          item && (
-            <animated.div
-              style={style}
-              className="fixed inset-0 z-10 bg-black bg-opacity-75"
-            />
-          )
-      )}
-
       {modalTransitions(
         (style, item) =>
           item && (
