@@ -53,11 +53,6 @@ function Post({
           style={{ backgroundImage: `url("${post.image}")` }}
         />
 
-        {/* Name */}
-        <h4 className="absolute bottom-0 left-0 m-0 w-full bg-gradient-to-t from-black p-2 text-2xl font-bold">
-          {post.title}
-        </h4>
-
         {/* Oh No! */}
         {decision < 0 && (
           <div

@@ -133,7 +133,7 @@ export default function GamePage() {
   }
 
   return (
-    <div className="flex h-full flex-col">
+    <div className="flex h-full flex-col overflow-hidden">
       <ConfirmModal
         open={showConfirm}
         onConfirmed={onConfirmed}
