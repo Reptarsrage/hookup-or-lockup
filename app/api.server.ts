@@ -71,6 +71,8 @@ export async function fetchPosts(
   params.set("status", "publish");
   params.set("page", page.toString());
   params.set("per_page", perPage.toString());
+  params.set("orderby", "title");
+  params.set("order", "asc");
 
   const response = await axios.get<WordpressPost[]>(
     `${url}?${params.toString()}`
