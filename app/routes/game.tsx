@@ -8,6 +8,7 @@ import { useDrag } from "@use-gesture/react";
 import { getPosts } from "~/models/post.server";
 import Number from "~/components/Number";
 import Post from "~/components/Post";
+import ConfirmModal from "~/components/ConfirmModal";
 
 const PAGE_SIZE = 10;
 
@@ -83,6 +84,8 @@ export default function GamePage() {
   const [index, setIndex] = useState(0);
   const [decision, setDecision] = useState(0);
 
+  const [modalOpen, setModalOpen] = useState(false);
+
   /**
    * Fetch the next page of posts from the server.
    * Updates the fetcher.
@@ -132,39 +135,49 @@ export default function GamePage() {
     }));
   }
 
+  function onConfirmed(confirmed: boolean) {
+    setModalOpen(false);
+
+    // reset card
+    setTimeout(() => {
+      if (confirmed) {
+        setIndex(index + 1);
+      }
+      reset();
+    }, 1000);
+
+    // record smash/pass
+    if (confirmed) {
+      const postId = posts[index].id;
+      const action = decision === 1 ? `/smash/${postId}` : `/pass/${postId}`;
+      smasherAndPasser.submit(
+        {},
+        {
+          method: "patch",
+          action,
+        }
+      );
+    }
+  }
+
   /**
    * When the user chooses smash or pass, animate card, record the decision and fetch more posts.
    */
   function onDecisionMade(decision: 1 | -1) {
-    const postId = posts[index].id;
-
     // fetch more posts if needed
     if (index >= posts.length - 2) {
       fetchMorePosts();
     }
 
     // animate card out of the screen
-    setDecision(1);
+    setDecision(decision);
     setGone(true);
     api.start(() =>
       update(true, decision * 999, decision, false, 0, setDecision)
     );
 
-    // reset card once off-screen
-    setTimeout(() => {
-      setIndex(index + 1);
-      reset();
-    }, 1000);
-
-    // record smash/pass
-    const action = decision === 1 ? `/smash/${postId}` : `/pass/${postId}`;
-    smasherAndPasser.submit(
-      {},
-      {
-        method: "patch",
-        action,
-      }
-    );
+    // Show Modal
+    setModalOpen(true);
   }
 
   // Spring to control card
@@ -218,6 +231,13 @@ export default function GamePage() {
 
   return (
     <div className="flex h-full flex-col">
+      <ConfirmModal
+        open={modalOpen}
+        closeModal={onConfirmed}
+        decision={decision}
+        post={posts[index]}
+      />
+
       <div className="m-2 text-center text-lg">
         Viewing <Number value={index + 1} /> of <Number value={total} />
       </div>
