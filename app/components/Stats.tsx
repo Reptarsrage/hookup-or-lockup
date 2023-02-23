@@ -41,7 +41,7 @@ function Stats({ post, shown }: StatsProps) {
         <span
           className={clsx(
             "font-bold",
-            post.lockedUp ? "text-blue-dark" : "text-red"
+            post.lockedUp ? "text-blue-light" : "text-red"
           )}
         >
           {post.title}
