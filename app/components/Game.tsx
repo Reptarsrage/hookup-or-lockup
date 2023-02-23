@@ -135,6 +135,10 @@ export default function Game({
         Viewing <Number value={index + 1} /> of <Number value={total} />
       </div>
 
+      <div className="m-2 text-center text-lg">
+        <h1 className="text-5xl font-semibold">{post.title}</h1>
+      </div>
+
       <div
         className="relative flex flex-1 items-center justify-center"
         ref={containerRef}
@@ -148,7 +152,7 @@ export default function Game({
             ),
             x: props.x,
             y: props.y,
-            maxHeight: height - GUTTER,
+            maxHeight: Math.min(600, height - GUTTER),
             aspectRatio: "2/3",
           }}
           className="absolute flex h-full touch-none select-none flex-col gap-2 overflow-hidden rounded-xl bg-pink shadow-lg will-change-transform"
