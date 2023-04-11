@@ -1,13 +1,8 @@
-import { useRef, useState } from "react";
-import { to as interpolate, useSpring } from "@react-spring/web";
-import { useDrag } from "@use-gesture/react";
+import { useState } from "react";
 
 import type { PostWithImageAndStats } from "~/models/post.server";
 import Number from "~/components/Number";
-import Post from "~/components/Post";
-import useSize from "@react-hook/size";
-
-const GUTTER = 16;
+import { AyYo, OhNo } from "~/components/icons";
 
 type Decision = -1 | 1;
 
@@ -19,48 +14,6 @@ type GameProps = {
   onDecisionMade: (decision: Decision) => void;
 };
 
-/**
- * Controls card animation.
- *
- * @param gone - if the card is gone
- * @param mx - x movement
- * @param xDir - x direction
- * @param active - if the card is being dragged
- * @param vx - x velocity
- * @param setDecision - setter for the decision state
- * @returns - animation properties
- */
-function update(
-  gone: boolean,
-  mx: number,
-  xDir: number,
-  active: boolean,
-  vx: number,
-  setDecision: (val: number) => void
-) {
-  const x = gone ? (200 + window.innerWidth) * xDir : active ? mx : 0; // When a card is gone it flys out left or right, otherwise goes back to zero
-  const rot = mx / 100 + (gone ? xDir * 10 * vx : 0); // How much the card tilts, flicking it harder makes it rotate faster
-  const scale = active ? 1.1 : 1; // Active cards lift up a bit
-
-  if (active) {
-    // User is dragging the card
-    setDecision(Math.max(-1, Math.min(1, mx / (window.innerWidth / 3))));
-  } else if (!gone) {
-    // User let go of the card, but it isn't flying out yet
-    setDecision(0);
-  }
-
-  return {
-    x,
-    rot,
-    scale,
-    config: {
-      friction: 50,
-      tension: active ? 800 : gone ? 200 : 500,
-    },
-  };
-}
-
 export default function Game({
   isLoading,
   onDecisionMade,
@@ -68,128 +21,85 @@ export default function Game({
   index,
   total,
 }: GameProps) {
-  const [gone, setGone] = useState(false);
-  const [decision, setDecision] = useState(0);
+  const [interactable] = useState(true);
 
-  const containerRef = useRef(null);
-  const [, height] = useSize(containerRef);
-
-  /**
-   * When the user chooses smash or pass, animate card, record the decision and fetch more posts.
-   */
-  function decisionMade(decision: Decision) {
-    // animate card out of the screen
-    setDecision(decision);
-    setGone(true);
-    api.start(() =>
-      update(true, decision * 999, decision, false, 0, setDecision)
-    );
-
-    // inform game of decision after card is gone
-    setTimeout(() => {
-      onDecisionMade(decision);
-    }, 200);
+  function ohNo() {
+    onDecisionMade(-1);
   }
 
-  // Spring to control card
-  const [props, api] = useSpring(() => ({
-    to: {
-      x: 0,
-      y: 0,
-      rot: 0,
-      scale: 1,
-    },
-    from: {
-      x: 0,
-      rot: 0,
-      scale: 1.5,
-      y: -1000,
-    },
-  }));
+  function ayYo() {
+    onDecisionMade(1);
+  }
 
-  // gestures to control card
-  const bind = useDrag(
-    ({ active, movement: [mx], direction: [xDir], velocity: [vx], cancel }) => {
-      const decisionIsMade = Math.abs(mx) >= window.innerWidth / 3;
-      const trigger = vx > 0.5;
-      const directionMatchesDecision = mx < 0 === xDir < 0;
-      if (!active && trigger && decisionIsMade && directionMatchesDecision) {
-        if (xDir < 0) {
-          decisionMade(-1);
-          cancel();
-        } else {
-          decisionMade(1);
-          cancel();
-        }
-      }
-
-      api.start(() => update(gone, mx, xDir, active, vx, setDecision));
-    }
-  );
-
-  const interactable = !(gone || isLoading);
+  // TODO: Loading skeleton
 
   return (
-    <>
-      <div className="m-2 text-center text-lg">
-        Viewing <Number value={index + 1} /> of <Number value={total} />
-      </div>
+    <div className="flex flex-1 flex-col items-center justify-center gap-4 overflow-hidden p-4 md:gap-8 md:p-8">
+      {/* Counter */}
+      <span className="text-xl text-gray-dark">
+        <b>
+          <Number value={index + 1} />
+        </b>{" "}
+        {" of "}
+        <b>
+          <Number value={total} />
+        </b>
+      </span>
 
-      <div className="m-2 text-center text-lg">
-        <h1 className="text-5xl font-semibold">{post.title}</h1>
-      </div>
-
-      <div
-        className="relative flex flex-1 items-center justify-center"
-        ref={containerRef}
-      >
-        <Post
-          {...(interactable ? bind() : {})}
-          style={{
-            transform: interpolate(
-              [props.rot, props.scale],
-              (r, s) => `rotate(${r}deg) scale(${s})`
-            ),
-            x: props.x,
-            y: props.y,
-            maxHeight: Math.min(600, height - GUTTER),
-            aspectRatio: "2/3",
-          }}
-          className="absolute flex h-full touch-none select-none flex-col gap-2 overflow-hidden rounded-xl bg-pink shadow-lg will-change-transform"
+      <div className="flex items-center justify-center ">
+        {/* Profile card (desktop) */}
+        <div
           data-testid="card"
-          post={post}
-          decision={decision}
-          isLoading={isLoading}
-        />
+          className="flex aspect-h-video max-w-sm flex-col justify-stretch overflow-hidden rounded-xl bg-blue-dark shadow-lg md:aspect-video md:max-w-4xl md:flex-row"
+        >
+          <div className="relative flex h-1/2 items-end md:aspect-h-video md:h-full">
+            <img
+              src={post.image}
+              alt={post.title}
+              className="absolute left-0 top-0 z-0 h-full w-full object-cover object-top"
+            />
+            <h1 className="z-10 w-full bg-gradient-to-t from-black p-4 text-center text-4xl font-bold text-blue-lighter md:hidden">
+              {post.title}
+            </h1>
+          </div>
+          <div className="flex flex-1 flex-col overflow-hidden p-8">
+            <h1 className="mb-4 hidden text-4xl font-bold text-blue-lighter md:block">
+              {post.title}
+            </h1>
+            {/* TODO: Tags? */}
+            <p className="flex-1 overflow-auto text-sm text-blue-lighter">
+              {post.description}
+            </p>
+          </div>
+        </div>
       </div>
 
-      <div className="flex items-center justify-center">
-        <p className="max-h-[33vh] max-w-[600px] overflow-auto p-4">
-          {post.description}
-        </p>
-      </div>
-
-      <div className="hidden items-center justify-center gap-8 p-4 md:flex">
+      {/* Buttons */}
+      <div className="flex items-center justify-center gap-4 p-4 md:gap-8">
         <button
-          className="flex h-32 w-32 flex-col items-center justify-center rounded-full border-none bg-blue-light px-4 py-3 text-lg font-medium uppercase text-blue-dark outline-none transition-opacity duration-300 hover:bg-blue-lighter disabled:cursor-not-allowed disabled:opacity-30 disabled:blur-sm"
+          className="rounded-full bg-blue-light px-6 py-6 text-3xl font-semibold text-blue-dark outline-none transition-opacity duration-300 hover:bg-blue-lighter disabled:cursor-not-allowed disabled:opacity-30 disabled:blur-sm md:px-8 md:py-4"
           disabled={!interactable}
-          onClick={() => onDecisionMade(-1)}
+          onClick={ohNo}
           data-testid="oh-no"
         >
-          <img width="64" height="64" src="/oh-no-dark.svg" alt="Oh No" />
-          <span>Oh No!</span>
+          <OhNo className="inline h-12 w-12 md:h-8 md:w-8" />
+          <span className="ml-4 hidden md:inline">Lockup</span>
         </button>
 
+        <span className="text-3xl font-bold uppercase italic text-gray-dark md:text-4xl">
+          Or
+        </span>
+
         <button
-          className="flex h-32 w-32 flex-col items-center justify-center rounded-full border-none bg-pink px-4 py-3 text-lg font-medium uppercase text-red outline-none transition-opacity duration-300 hover:bg-pink-light disabled:cursor-not-allowed disabled:opacity-30 disabled:blur-sm"
+          className="rounded-full bg-pink px-6 py-6 text-3xl font-semibold text-red-dark outline-none transition-opacity duration-300 hover:bg-pink-light disabled:cursor-not-allowed disabled:opacity-30 disabled:blur-sm md:px-8 md:py-4"
           disabled={!interactable}
-          onClick={() => onDecisionMade(1)}
+          onClick={ayYo}
           data-testid="ay-yo"
         >
-          <img width="64" height="64" src="/ay-yo.svg" alt="Ay Yo" />
-          <span>Ay Yo!</span>
+          <AyYo className="inline h-12 w-12 md:h-8 md:w-8" />
+          <span className="ml-4 hidden md:inline">Hookup</span>
         </button>
       </div>
-    </>
+    </div>
   );
 }

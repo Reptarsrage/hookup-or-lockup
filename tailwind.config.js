@@ -14,9 +14,15 @@ module.exports = {
       "red-dark": "#6b2d28",
       gray: "#8f9cb5",
       "gray-light": "#a5afc3",
+      "gray-dark": "#545367",
     },
     fontFamily: {
       sans: ["Poppins", "sans-serif"],
+    },
+    extend: {
+      aspectRatio: {
+        "h-video": "9 / 16",
+      },
     },
   },
   plugins: [],

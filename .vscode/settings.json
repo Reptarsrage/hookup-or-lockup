@@ -22,5 +22,25 @@
     "**/*.code-search": true,
     "**/build": true,
     "**/package-lock.json": true
-  }
+  },
+  "workbench.colorCustomizations": {
+    "activityBar.activeBackground": "#5ad978",
+    "activityBar.background": "#5ad978",
+    "activityBar.foreground": "#15202b",
+    "activityBar.inactiveForeground": "#15202b99",
+    "activityBarBadge.background": "#8064db",
+    "activityBarBadge.foreground": "#e7e7e7",
+    "commandCenter.border": "#15202b99",
+    "sash.hoverBorder": "#5ad978",
+    "statusBar.background": "#31cf56",
+    "statusBar.foreground": "#15202b",
+    "statusBarItem.hoverBackground": "#27a645",
+    "statusBarItem.remoteBackground": "#31cf56",
+    "statusBarItem.remoteForeground": "#15202b",
+    "titleBar.activeBackground": "#31cf56",
+    "titleBar.activeForeground": "#15202b",
+    "titleBar.inactiveBackground": "#31cf5699",
+    "titleBar.inactiveForeground": "#15202b99"
+  },
+  "peacock.color": "#31cf56"
 }

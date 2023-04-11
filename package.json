@@ -25,6 +25,9 @@
   ],
   "homepage": "https://github.com/reptarsrage/hookup-or-lockup#readme",
   "scripts": {
+    "icons": "npx @svgr/cli --out-dir app/components/icons -- app/icons",
+    "icons:watch": "npm-watch icons",
+    "dev:svg": "run-s icons icons:watch",
     "build": "run-s build:*",
     "build:css": "npm run generate:css -- --minify",
     "build:remix": "remix build",
@@ -78,6 +81,10 @@
     "@commitlint/config-conventional": "^17.4.2",
     "@remix-run/dev": "^1.9.0",
     "@remix-run/eslint-config": "^1.9.0",
+    "@svgr/cli": "^7.0.0",
+    "@svgr/plugin-jsx": "^7.0.0",
+    "@svgr/plugin-prettier": "^7.0.0",
+    "@svgr/plugin-svgo": "^7.0.0",
     "@testing-library/cypress": "^9.0.0",
     "@testing-library/dom": "^9.0.0",
     "@testing-library/jest-dom": "^5.16.5",
@@ -105,6 +112,7 @@
     "husky": "^8.0.3",
     "lint-staged": "^13.1.0",
     "npm-run-all": "^4.1.5",
+    "npm-watch": "^0.11.0",
     "postcss": "^8.4.18",
     "prettier": "2.8.7",
     "prettier-plugin-tailwindcss": "^0.2.0",
@@ -128,6 +136,15 @@
   "config": {
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "watch": {
+    "icons": {
+      "patterns": [
+        "icons"
+      ],
+      "extensions": "svg",
+      "quiet": false
     }
   }
 }

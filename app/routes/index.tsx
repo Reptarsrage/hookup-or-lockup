@@ -9,11 +9,16 @@ import { useEffect, useState } from "react";
 import clsx from "clsx";
 import { useNavigate } from "@remix-run/react";
 
+import Error from "../components/Error";
 import SlideOne from "../components/SlideOne";
 import SlideTwo from "../components/SlideTwo";
 import SlideThree from "../components/SlideThree";
 
 const slides = [SlideOne, SlideTwo, SlideThree];
+
+export function ErrorBoundary() {
+  return <Error />;
+}
 
 export default function Index() {
   const navigate = useNavigate();
