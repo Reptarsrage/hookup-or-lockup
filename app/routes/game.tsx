@@ -7,6 +7,8 @@ import { getPosts } from "~/models/post.server";
 import ConfirmModal from "~/components/ConfirmModal";
 import Game from "~/components/Game";
 import Results from "~/components/Results";
+import GameOver from "~/components/GameOver";
+import Error from "~/components/Error";
 
 const PAGE_SIZE = 10;
 
@@ -28,6 +30,10 @@ export async function loader({ request }: LoaderArgs) {
 
   const response = await getPosts(page, PAGE_SIZE);
   return json(response);
+}
+
+export function ErrorBoundary() {
+  return <Error />;
 }
 
 export default function GamePage() {
@@ -73,7 +79,6 @@ export default function GamePage() {
   }, [fetcher.data, fetcher.state]);
 
   function onDecisionMade(decision: Decision) {
-    setShowGame(false);
     setDecision(decision);
     setShowConfirm(true);
   }
@@ -82,7 +87,6 @@ export default function GamePage() {
     setShowConfirm(false);
 
     if (!confirmed) {
-      setShowGame(true);
       return;
     }
 
@@ -110,6 +114,7 @@ export default function GamePage() {
       post.passes++;
     }
 
+    setShowGame(false);
     setShowResults(true);
   }
 
@@ -125,11 +130,7 @@ export default function GamePage() {
 
   // TODO: design a game over screen
   if (isEnd) {
-    return (
-      <div className="flex h-full flex-col">
-        <div className="m-2 text-center text-lg">Game Over</div>
-      </div>
-    );
+    return <GameOver />;
   }
 
   return (

@@ -31,10 +31,22 @@ function ConfirmModal({
 
   return (
     <>
+      {/* Backdrop */}
       {modalTransitions(
         (style, item) =>
           item && (
-            <div className="fixed inset-0 z-20 flex items-center justify-center">
+            <animated.div
+              style={style}
+              className="bg-[rgba(0, 0, 0, 0.4)] fixed left-0 top-0 z-20 h-full w-full backdrop-blur-md"
+            />
+          )
+      )}
+
+      {/* Modal */}
+      {modalTransitions(
+        (style, item) =>
+          item && (
+            <div className="fixed inset-0 z-30 flex items-center justify-center">
               <animated.div
                 style={style}
                 className="relative flex h-screen w-screen flex-col overflow-hidden rounded-xl bg-white text-black shadow-xl md:h-auto md:w-[400px]"
@@ -42,7 +54,7 @@ function ConfirmModal({
                 <button
                   onClick={onCancelled}
                   disabled={!open}
-                  className="absolute top-1 right-1 cursor-pointer text-4xl text-gray hover:text-gray-light"
+                  className="absolute right-1 top-1 cursor-pointer text-4xl text-gray hover:text-gray-light"
                 >
                   ×
                 </button>
