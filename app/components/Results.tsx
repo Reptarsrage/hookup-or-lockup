@@ -6,21 +6,19 @@ import { useWindowSize } from "@react-hook/window-size";
 type ResultsProps = {
   decision: number;
   post: PostWithImageAndStats;
+  onShowYourStats: () => void;
   onGoNext: () => void;
 };
 
-function Results({ onGoNext: closeResults, post, decision }: ResultsProps) {
+function Results({
+  onGoNext: close,
+  onShowYourStats: showStats,
+  post,
+  decision,
+}: ResultsProps) {
   const [innerWidth, innerHeight] = useSsrCompatible(useWindowSize(), [0, 0]);
   const choseLockedUp = decision === -1;
   const isCorrect = choseLockedUp === post.lockedUp;
-
-  function close() {
-    closeResults();
-  }
-
-  function showStats() {
-    // TODO: show stats
-  }
 
   return (
     <div className="fixed inset-0 flex flex-col items-center justify-center px-4 md:p-8">

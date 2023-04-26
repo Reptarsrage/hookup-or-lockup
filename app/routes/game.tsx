@@ -1,6 +1,6 @@
 import type { LoaderArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { useFetcher, useLoaderData } from "@remix-run/react";
+import { useFetcher, useLoaderData, useSearchParams } from "@remix-run/react";
 import { useEffect, useState } from "react";
 
 import { getPosts } from "~/models/post.server";
@@ -9,6 +9,7 @@ import Game from "~/components/Game";
 import Results from "~/components/Results";
 import GameOver from "~/components/GameOver";
 import Error from "~/components/Error";
+import YourStats from "~/components/YourStats";
 
 const PAGE_SIZE = 10;
 
@@ -37,6 +38,8 @@ export function ErrorBoundary() {
 }
 
 export default function GamePage() {
+  const [qs] = useSearchParams();
+
   const smasherAndPasser = useFetcher();
   const fetcher = useFetcher();
   let response = useLoaderData<typeof loader>();
@@ -48,9 +51,19 @@ export default function GamePage() {
   const [total] = useState(response.total);
 
   // Game state
-  const [showGame, setShowGame] = useState(true);
-  const [showConfirm, setShowConfirm] = useState(false);
-  const [showResults, setShowResults] = useState(false);
+  const defaultShowGame = (qs.get("showGame") ?? "yes") === "yes";
+  const defaultShowConfirm = (qs.get("showConfirm") ?? "no") === "yes";
+  const defaultShowResults = (qs.get("showResults") ?? "no") === "yes";
+  const defaultShowYourStats = (qs.get("showYourStats") ?? "no") === "yes";
+  const defaultShowGameOver = (qs.get("gameOver") ?? "no") === "yes";
+
+  const [showGame, setShowGame] = useState(
+    defaultShowGame && !defaultShowGameOver
+  );
+  const [showConfirm, setShowConfirm] = useState(defaultShowConfirm);
+  const [showResults, setShowResults] = useState(defaultShowResults);
+  const [showYourStats, setShowYourStats] = useState(defaultShowYourStats);
+  const [showGameOver, setShowGameOver] = useState(defaultShowGameOver);
 
   /**
    * Fetch the next page of posts from the server.
@@ -81,6 +94,18 @@ export default function GamePage() {
   function onDecisionMade(decision: Decision) {
     setDecision(decision);
     setShowConfirm(true);
+  }
+
+  function onCloseYourStats() {
+    setShowYourStats(false);
+
+    // TODO: This has issues
+    const isGameOver = index >= total - 1;
+    if (isGameOver) {
+      setShowGameOver(true);
+    } else {
+      setShowResults(true);
+    }
   }
 
   function onConfirmed(confirmed: boolean) {
@@ -121,17 +146,27 @@ export default function GamePage() {
   function onGoNext() {
     setShowResults(false);
     setIndex(index + 1);
-    setShowGame(true);
+
+    const isGameOver = index + 1 >= total - 1;
+    if (isGameOver) {
+      setShowGameOver(true);
+    } else {
+      setShowGame(true);
+    }
   }
 
-  const isEnd = index >= total - 1;
+  function onShowYourStats() {
+    setShowGameOver(false);
+    setShowResults(false);
+    setShowYourStats(true);
+  }
+
+  function onShowGlobalStats() {
+    // TODO: Show global stats
+  }
+
   const isLoading = fetcher.state === "loading" && index >= posts.length;
   const post = posts[index];
-
-  // TODO: design a game over screen
-  if (isEnd) {
-    return <GameOver />;
-  }
 
   return (
     <div className="flex h-full flex-col overflow-hidden">
@@ -142,8 +177,22 @@ export default function GamePage() {
         post={post}
       />
 
+      {showGameOver && (
+        <GameOver
+          onShowYourStats={onShowYourStats}
+          onShowGlobalStats={onShowGlobalStats}
+        />
+      )}
+
+      {showYourStats && <YourStats onContinue={onCloseYourStats} />}
+
       {showResults && (
-        <Results onGoNext={onGoNext} decision={decision} post={post} />
+        <Results
+          onGoNext={onGoNext}
+          onShowYourStats={onShowYourStats}
+          decision={decision}
+          post={post}
+        />
       )}
 
       {showGame && (
