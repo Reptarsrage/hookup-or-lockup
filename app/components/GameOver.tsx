@@ -1,12 +1,12 @@
-export default function GameOver() {
-  function showUserStats() {
-    // TODO: show stats
-  }
+type GameOverProps = {
+  onShowYourStats: () => void;
+  onShowGlobalStats: () => void;
+};
 
-  function showAllTimeStats() {
-    // TODO: show stats
-  }
-
+export default function GameOver({
+  onShowYourStats: showUserStats,
+  onShowGlobalStats: showAllTimeStats,
+}: GameOverProps) {
   return (
     <div className="flex h-full flex-col items-center justify-center gap-4 p-4 text-blue-lighter md:gap-8 md:p-8">
       <main className="max-w-xs text-center">
@@ -35,7 +35,7 @@ export default function GameOver() {
           onClick={showAllTimeStats}
           data-testid="continue"
         >
-          Continue
+          Global Stats
         </button>
       </footer>
     </div>

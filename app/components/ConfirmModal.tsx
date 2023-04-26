@@ -37,7 +37,7 @@ function ConfirmModal({
           item && (
             <animated.div
               style={style}
-              className="bg-[rgba(0, 0, 0, 0.4)] fixed left-0 top-0 z-20 h-full w-full backdrop-blur-md"
+              className="bg-[rgba(0, 0, 0, 0.4)] fixed inset-0 z-20 backdrop-blur-md"
             />
           )
       )}
@@ -49,18 +49,18 @@ function ConfirmModal({
             <div className="fixed inset-0 z-30 flex items-center justify-center">
               <animated.div
                 style={style}
-                className="relative flex h-screen w-screen flex-col overflow-hidden rounded-xl bg-white text-black shadow-xl md:h-auto md:w-[400px]"
+                className="relative flex h-screen w-screen flex-col overflow-hidden bg-white text-black shadow-xl md:h-auto md:w-[400px] md:rounded-xl"
               >
                 <button
                   onClick={onCancelled}
                   disabled={!open}
-                  className="absolute right-1 top-1 cursor-pointer text-4xl text-gray hover:text-gray-light"
+                  className="absolute right-2 top-1 cursor-pointer text-5xl text-gray hover:text-gray-light md:text-4xl"
                 >
                   ×
                 </button>
 
                 <div className="flex-1 flex-col px-8 py-16">
-                  <div className="text-center text-xl">
+                  <div className="text-center text-3xl md:text-xl">
                     You guessed {post.title} is
                     <b
                       className={clsx(
@@ -74,23 +74,25 @@ function ConfirmModal({
                     className="mx-auto my-8 h-48 w-48 rounded-full bg-cover bg-top bg-no-repeat"
                     style={{ backgroundImage: `url("${post.image}")` }}
                   />
-                  <div className="text-center text-xl">Is that correct?</div>
+                  <div className="text-center text-3xl md:text-xl">
+                    Is that correct?
+                  </div>
                 </div>
 
                 <div className="flex w-full flex-row">
-                  <button
-                    className="w-1/2 cursor-pointer border-none bg-pink px-8 py-6 text-lg font-medium text-white outline-none transition-opacity duration-300 hover:bg-pink-light disabled:cursor-not-allowed disabled:opacity-30 disabled:blur-sm"
-                    disabled={!open}
-                    onClick={onConfirmed}
-                  >
-                    Yes
-                  </button>
                   <button
                     className="w-1/2 cursor-pointer border-none bg-gray px-8 py-6 text-lg font-medium text-white outline-none transition-opacity duration-300 hover:bg-gray-light disabled:cursor-not-allowed disabled:opacity-30 disabled:blur-sm"
                     disabled={!open}
                     onClick={onCancelled}
                   >
                     No
+                  </button>
+                  <button
+                    className="w-1/2 cursor-pointer border-none bg-pink px-8 py-6 text-lg font-medium text-white outline-none transition-opacity duration-300 hover:bg-pink-light disabled:cursor-not-allowed disabled:opacity-30 disabled:blur-sm"
+                    disabled={!open}
+                    onClick={onConfirmed}
+                  >
+                    Yes
                   </button>
                 </div>
               </animated.div>
