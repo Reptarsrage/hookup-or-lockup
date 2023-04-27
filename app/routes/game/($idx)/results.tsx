@@ -1,27 +1,36 @@
 import Confetti from "react-confetti";
-import type { PostWithImageAndStats } from "~/models/post.server";
 import { useSsrCompatible } from "~/hooks/useSsrCompatible";
 import { useWindowSize } from "@react-hook/window-size";
+import { Link, useLocation, useSearchParams } from "@remix-run/react";
+import { redirect } from "@remix-run/server-runtime";
+import useParentData from "~/hooks/useParentData";
+import useRouteIndex from "~/hooks/useRouteIndex";
 
-type ResultsProps = {
-  decision: number;
-  post: PostWithImageAndStats;
-  onShowYourStats: () => void;
-  onGoNext: () => void;
-};
+type Undecided = 0;
+type Decision = -1 | 1;
 
-function Results({
-  onGoNext: close,
-  onShowYourStats: showStats,
-  post,
-  decision,
-}: ResultsProps) {
+export default function ResultsPage() {
   const [innerWidth, innerHeight] = useSsrCompatible(useWindowSize(), [0, 0]);
+
+  const location = useLocation();
+  const [searchParams] = useSearchParams();
+  const decisionStr = searchParams.get("decision") ?? "0";
+  const decision = parseInt(decisionStr) as Decision | Undecided;
+
+  const parentData = useParentData();
+  const index = useRouteIndex();
+
+  if (decision === 0) {
+    return redirect("/game");
+  }
+
+  const post = parentData.posts[index];
   const choseLockedUp = decision === -1;
   const isCorrect = choseLockedUp === post.lockedUp;
+  const returnUrl = `${location.pathname}${location.search}`;
 
   return (
-    <div className="fixed inset-0 flex flex-col items-center justify-center px-4 md:p-8">
+    <>
       <Confetti
         width={innerWidth}
         height={innerHeight}
@@ -60,27 +69,23 @@ function Results({
         </section>
 
         <footer className="flex w-full flex-row justify-between gap-4 md:gap-8">
-          <button
-            className="flex-1 rounded-2xl bg-blue-light p-4 text-white outline-none transition-opacity duration-300 hover:bg-blue-lighter disabled:cursor-not-allowed disabled:opacity-30 disabled:blur-sm"
-            disabled={false}
-            onClick={showStats}
-            data-testid="stats"
+          <Link
+            className="flex-1 rounded-2xl bg-blue-light p-4 text-center text-white outline-none transition-opacity duration-300 hover:bg-blue-lighter disabled:cursor-not-allowed disabled:opacity-30 disabled:blur-sm"
+            to={`/game/user-stats?${new URLSearchParams({
+              returnUrl,
+            }).toString()}`}
           >
             Your stats
-          </button>
+          </Link>
 
-          <button
-            className="flex-1 rounded-2xl bg-pink p-4 text-white outline-none transition-opacity duration-300 hover:bg-pink-light disabled:cursor-not-allowed disabled:opacity-30 disabled:blur-sm"
-            disabled={false}
-            onClick={close}
-            data-testid="continue"
+          <Link
+            className="flex-1 rounded-2xl bg-pink p-4 text-center text-white outline-none transition-opacity duration-300 hover:bg-pink-light disabled:cursor-not-allowed disabled:opacity-30 disabled:blur-sm"
+            to={`/game/${index + 1}`}
           >
             Continue
-          </button>
+          </Link>
         </footer>
       </div>
-    </div>
+    </>
   );
 }
-
-export default Results;
