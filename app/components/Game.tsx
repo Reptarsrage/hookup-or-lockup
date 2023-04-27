@@ -7,7 +7,6 @@ import { AyYo, OhNo } from "~/components/icons";
 type Decision = -1 | 1;
 
 type GameProps = {
-  isLoading: boolean;
   post: PostWithImageAndStats;
   index: number;
   total: number;
@@ -15,7 +14,6 @@ type GameProps = {
 };
 
 export default function Game({
-  isLoading,
   onDecisionMade,
   post,
   index,

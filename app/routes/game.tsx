@@ -1,20 +1,20 @@
 import type { LoaderArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { useFetcher, useLoaderData, useSearchParams } from "@remix-run/react";
-import { useEffect, useState } from "react";
+import {
+  Outlet,
+  isRouteErrorResponse,
+  useLoaderData,
+  useRouteError,
+} from "@remix-run/react";
 
 import { getPosts } from "~/models/post.server";
-import ConfirmModal from "~/components/ConfirmModal";
-import Game from "~/components/Game";
-import Results from "~/components/Results";
-import GameOver from "~/components/GameOver";
-import Error from "~/components/Error";
-import YourStats from "~/components/YourStats";
+import ErrorElt from "~/components/Error";
+import NotFound from "~/components/NotFound";
 
+/**
+ * Page size when fetching data
+ */
 const PAGE_SIZE = 10;
-
-type Undecided = 0;
-type Decision = -1 | 1;
 
 /**
  * Remix loader function.
@@ -22,188 +22,43 @@ type Decision = -1 | 1;
  * @param args - loader arguments
  * @returns - loader data
  */
-export async function loader({ request }: LoaderArgs) {
-  const url = new URL(request.url);
-  let page = url.searchParams.get("page") || 1;
-  if (typeof page == "string") {
-    page = parseInt(page, 10);
+export async function loader({ params }: LoaderArgs) {
+  const indexStr = params.idx || "0";
+  const index = parseInt(indexStr, 10);
+  if (isNaN(index)) {
+    throw new Response("Not found", { status: 404 });
   }
 
+  const page = (index % PAGE_SIZE) + 1; // 1-based indexing
   const response = await getPosts(page, PAGE_SIZE);
   return json(response);
 }
 
 export function ErrorBoundary() {
-  return <Error />;
+  const error = useRouteError();
+  if (isRouteErrorResponse(error) && error.status === 404) {
+    return <NotFound />;
+  }
+
+  // Don't forget to typecheck with your own logic.
+  // Any value can be thrown, not just errors!
+  let errorMessage = "Unknown error";
+  if (error instanceof Error) {
+    errorMessage = error.message;
+  }
+
+  console.error(errorMessage);
+  return <ErrorElt />;
 }
 
-export default function GamePage() {
-  const [qs] = useSearchParams();
+export default function GameLayout() {
+  useLoaderData<typeof loader>(); // used in child routes
 
-  const smasherAndPasser = useFetcher();
-  const fetcher = useFetcher();
-  let response = useLoaderData<typeof loader>();
-
-  const [decision, setDecision] = useState<Decision | Undecided>(0); // TODO: Load last index from session
-  const [index, setIndex] = useState(0); // TODO: Load last index from session
-  const [posts, setPosts] = useState(response.posts);
-  const [page, setPage] = useState(response.page);
-  const [total] = useState(response.total);
-
-  // Game state
-  const defaultShowGame = (qs.get("showGame") ?? "yes") === "yes";
-  const defaultShowConfirm = (qs.get("showConfirm") ?? "no") === "yes";
-  const defaultShowResults = (qs.get("showResults") ?? "no") === "yes";
-  const defaultShowYourStats = (qs.get("showYourStats") ?? "no") === "yes";
-  const defaultShowGameOver = (qs.get("gameOver") ?? "no") === "yes";
-
-  const [showGame, setShowGame] = useState(
-    defaultShowGame && !defaultShowGameOver
-  );
-  const [showConfirm, setShowConfirm] = useState(defaultShowConfirm);
-  const [showResults, setShowResults] = useState(defaultShowResults);
-  const [showYourStats, setShowYourStats] = useState(defaultShowYourStats);
-  const [showGameOver, setShowGameOver] = useState(defaultShowGameOver);
-
-  /**
-   * Fetch the next page of posts from the server.
-   * Updates the fetcher.
-   */
-  async function fetchMorePosts() {
-    if (fetcher.state !== "loading") {
-      console.log("FETCHING MORE POSTS");
-      const query = `/game?&page=${page + 1}`;
-      fetcher.load(query);
-    }
-  }
-
-  // When the fetcher updates, update the posts
-  useEffect(() => {
-    if (!fetcher.data || fetcher.state === "loading") {
-      return;
-    }
-
-    // If we have new data - append it
-    if (fetcher.data) {
-      const newItems = fetcher.data;
-      setPosts((posts) => posts.concat(newItems.posts));
-      setPage(newItems.page);
-    }
-  }, [fetcher.data, fetcher.state]);
-
-  function onDecisionMade(decision: Decision) {
-    setDecision(decision);
-    setShowConfirm(true);
-  }
-
-  function onCloseYourStats() {
-    setShowYourStats(false);
-
-    // TODO: This has issues
-    const isGameOver = index >= total - 1;
-    if (isGameOver) {
-      setShowGameOver(true);
-    } else {
-      setShowResults(true);
-    }
-  }
-
-  function onConfirmed(confirmed: boolean) {
-    setShowConfirm(false);
-
-    if (!confirmed) {
-      return;
-    }
-
-    // fetch more posts if needed
-    if (index >= posts.length - 2) {
-      fetchMorePosts();
-    }
-
-    // record smash/pass
-    const postId = posts[index].id;
-    const action = decision === 1 ? `/smash/${postId}` : `/pass/${postId}`;
-    smasherAndPasser.submit(
-      {},
-      {
-        method: "patch",
-        action,
-      }
-    );
-
-    // Update post stats
-    post.totalVotes++;
-    if (decision === 1) {
-      post.smashes++;
-    } else {
-      post.passes++;
-    }
-
-    setShowGame(false);
-    setShowResults(true);
-  }
-
-  function onGoNext() {
-    setShowResults(false);
-    setIndex(index + 1);
-
-    const isGameOver = index + 1 >= total - 1;
-    if (isGameOver) {
-      setShowGameOver(true);
-    } else {
-      setShowGame(true);
-    }
-  }
-
-  function onShowYourStats() {
-    setShowGameOver(false);
-    setShowResults(false);
-    setShowYourStats(true);
-  }
-
-  function onShowGlobalStats() {
-    // TODO: Show global stats
-  }
-
-  const isLoading = fetcher.state === "loading" && index >= posts.length;
-  const post = posts[index];
+  // TODO: Add dark mode & switcher
 
   return (
-    <div className="flex h-full flex-col overflow-hidden">
-      <ConfirmModal
-        open={showConfirm}
-        onConfirmed={onConfirmed}
-        decision={decision}
-        post={post}
-      />
-
-      {showGameOver && (
-        <GameOver
-          onShowYourStats={onShowYourStats}
-          onShowGlobalStats={onShowGlobalStats}
-        />
-      )}
-
-      {showYourStats && <YourStats onContinue={onCloseYourStats} />}
-
-      {showResults && (
-        <Results
-          onGoNext={onGoNext}
-          onShowYourStats={onShowYourStats}
-          decision={decision}
-          post={post}
-        />
-      )}
-
-      {showGame && (
-        <Game
-          isLoading={isLoading}
-          index={index}
-          total={total}
-          onDecisionMade={onDecisionMade}
-          post={post}
-        />
-      )}
+    <div className="flex h-full flex-col items-center justify-center overflow-hidden p-4 md:p-8">
+      <Outlet />
     </div>
   );
 }
