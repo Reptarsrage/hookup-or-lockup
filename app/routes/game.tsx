@@ -14,7 +14,8 @@ import NotFound from "~/components/NotFound";
 import SunIcon from "~/components/icons/Sun";
 import MoonIcon from "~/components/icons/Moon";
 import cache from "~/cache";
-import useTheme from "~/hooks/useTheme";
+import { useTheme } from "~/themeProvider";
+import { Theme } from "~/themeProvider";
 
 export const headers: HeadersFunction = () => ({
   "Cache-Control": "max-age=300, s-maxage=3600",
@@ -78,7 +79,9 @@ export default function GameLayout() {
   const [theme, setTheme] = useTheme();
 
   function toggleTheme() {
-    setTheme(theme === "dark" ? "light" : "dark");
+    setTheme((prevTheme) =>
+      prevTheme === Theme.LIGHT ? Theme.DARK : Theme.LIGHT
+    );
   }
 
   return (
@@ -87,7 +90,7 @@ export default function GameLayout() {
         onClick={toggleTheme}
         className="absolute left-2 top-1 hidden md:block"
       >
-        {theme === "dark" ? (
+        {theme === Theme.DARK ? (
           <MoonIcon className="inline h-12 w-12 md:h-8 md:w-8" />
         ) : (
           <SunIcon className="inline h-12 w-12 md:h-8 md:w-8" />
