@@ -5,6 +5,9 @@ import { Link, useLocation, useSearchParams } from "@remix-run/react";
 import { redirect } from "@remix-run/server-runtime";
 import useParentData from "~/hooks/useParentData";
 import useRouteIndex from "~/hooks/useRouteIndex";
+import useStatsTracker from "~/hooks/useStatsTracker";
+import Number from "~/components/Number";
+import { useMemo } from "react";
 
 type Undecided = 0;
 type Decision = -1 | 1;
@@ -19,6 +22,18 @@ export default function ResultsPage() {
 
   const parentData = useParentData();
   const index = useRouteIndex();
+
+  const { stats } = useStatsTracker();
+  const percentCorrect = useMemo(
+    () =>
+      Math.ceil(
+        (stats.filter((stat) => (stat.decision === -1) === stat.post.lockedUp)
+          .length /
+          stats.length) *
+          100.0
+      ),
+    [stats]
+  );
 
   if (decision === 0) {
     return redirect("/game");
@@ -64,7 +79,10 @@ export default function ResultsPage() {
 
         <section className="flex w-full items-center justify-center rounded-2xl bg-gray-light p-4">
           <span className="text-gray-dark">
-            So far you got <b>56% correct!</b>
+            So far you got{" "}
+            <b>
+              <Number value={percentCorrect} />% correct!
+            </b>
           </span>
         </section>
 

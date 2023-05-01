@@ -1,9 +1,31 @@
 import { Link, useSearchParams } from "@remix-run/react";
+import { useMemo } from "react";
 import Number from "~/components/Number";
+import useStatsTracker from "~/hooks/useStatsTracker";
 
 export default function UserStatsPage() {
   const [searchParams] = useSearchParams();
   const returnUrl = searchParams.get("returnUrl") || "/game";
+
+  const { stats } = useStatsTracker();
+
+  const { lockups, hookups, averageTimeTaken, percentCorrect } = useMemo(
+    () => ({
+      lockups: stats.filter((stat) => stat.decision === -1).length,
+      hookups: stats.filter((stat) => stat.decision === 1).length,
+      percentCorrect: Math.ceil(
+        (stats.filter((stat) => (stat.decision === -1) === stat.post.lockedUp)
+          .length /
+          stats.length) *
+          100.0
+      ),
+      averageTimeTaken:
+        stats.reduce((acc, stat) => acc + stat.timeTaken, 0) /
+        stats.length /
+        1000.0,
+    }),
+    [stats]
+  );
 
   return (
     <div className="flex w-full max-w-xl flex-col items-center justify-center gap-4 md:gap-8">
@@ -18,7 +40,7 @@ export default function UserStatsPage() {
           <div className="flex flex-col items-center">
             <div className="mb-4 flex h-32 w-32 items-center justify-center rounded-full bg-blue-light">
               <span className="text-[48px] font-bold text-blue-dark">
-                <Number value={16} />
+                <Number value={lockups} />
               </span>
             </div>
             <h5 className="text-2xl font-bold text-blue-dark">Lockup</h5>
@@ -28,7 +50,7 @@ export default function UserStatsPage() {
           <div className="flex flex-col items-center">
             <div className="mb-4 flex h-32 w-32 items-center justify-center rounded-full bg-gray-light">
               <span className="text-[48px] font-bold text-black">
-                <Number value={50} />%
+                <Number value={percentCorrect} />%
               </span>
             </div>
             <h5 className="text-2xl font-bold text-black">Correct</h5>
@@ -38,7 +60,7 @@ export default function UserStatsPage() {
           <div className="flex flex-col items-center">
             <div className="mb-4 flex h-32 w-32 items-center justify-center rounded-full bg-pink-light">
               <span className="text-[48px] font-bold text-red-dark">
-                <Number value={16} />
+                <Number value={hookups} />
               </span>
             </div>
             <h5 className="text-2xl font-bold text-red-dark">Hookup</h5>
@@ -50,7 +72,11 @@ export default function UserStatsPage() {
 
         <div className="flex w-full justify-evenly p-4">
           <p className="text-xl text-gray">
-            On average you take <b className="text-black">5 minutes</b> to guess
+            On average you take{" "}
+            <b className="text-black">
+              <Number value={averageTimeTaken} /> seconds
+            </b>{" "}
+            to guess
           </p>
         </div>
       </main>
