@@ -90,8 +90,6 @@ function useTheme() {
 
 const clientThemeCode = `
 ;(() => {
-  // ...
-
   const meta = document.querySelector('meta[name=color-scheme]');
   if (meta) {
     if (theme === 'dark') {
@@ -99,27 +97,13 @@ const clientThemeCode = `
     } else if (theme === 'light') {
       meta.content = 'light dark';
     }
-  } else {
-    console.warn(
-      "Hey, could you let Matt know you're seeing this message? Thanks!",
-    );
   }
 })();
 `;
 
 function NonFlashOfWrongThemeEls({ ssrTheme }: { ssrTheme: boolean }) {
-  const [theme] = useTheme();
-
-  return (
-    <>
-      <meta
-        name="color-scheme"
-        content={theme === "light" ? "light dark" : "dark light"}
-      />
-      {ssrTheme ? null : (
-        <script dangerouslySetInnerHTML={{ __html: clientThemeCode }} />
-      )}
-    </>
+  return ssrTheme ? null : (
+    <script dangerouslySetInnerHTML={{ __html: clientThemeCode }} />
   );
 }
 

@@ -40,10 +40,7 @@ export async function loader({ params }: LoaderArgs) {
   }
 
   const page = Math.floor(index / PAGE_SIZE) + 1; // 1-based indexing
-  console.warn("PAGE " + page + " LOADED", { index, PAGE_SIZE });
-
   if (cache.has(page)) {
-    console.warn("CACHED");
     return json(cache.get(page));
   }
 
