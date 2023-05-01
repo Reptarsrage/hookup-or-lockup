@@ -10,6 +10,7 @@ import {
 
 import tailwindStylesheetUrl from "./styles/tailwind.css";
 import indexStylesheetUrl from "./styles/index.css";
+import useTheme from "./hooks/useTheme";
 
 export const links: LinksFunction = () => {
   return [
@@ -32,13 +33,15 @@ export const meta: V2_MetaFunction = () => {
 };
 
 export default function App() {
+  useTheme();
+
   return (
     <html lang="en" className="h-full">
       <head>
         <Meta />
         <Links />
       </head>
-      <body className="h-full bg-black font-sans text-white">
+      <body className="h-full bg-red-dark font-sans text-pink dark:bg-black dark:text-blue-lighter">
         <Outlet />
         <ScrollRestoration />
         <Scripts />
