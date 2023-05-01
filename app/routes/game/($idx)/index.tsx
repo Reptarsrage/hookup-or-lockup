@@ -5,6 +5,7 @@ import ConfirmModal from "~/components/ConfirmModal";
 import Game from "~/components/Game";
 import useParentData from "~/hooks/useParentData";
 import useRouteIndex from "~/hooks/useRouteIndex";
+import useStatsTracker from "~/hooks/useStatsTracker";
 
 type Undecided = 0;
 type Decision = -1 | 1;
@@ -22,6 +23,9 @@ export default function GamePage() {
   const [decision, setDecision] = useState<Decision | Undecided>(0);
   const [showConfirm, setShowConfirm] = useState(false);
 
+  const { recordStats } = useStatsTracker();
+  const [startTime, setStartTime] = useState(new Date().getTime());
+
   function onDecisionMade(decision: Decision) {
     setDecision(decision);
     setShowConfirm(true);
@@ -30,7 +34,7 @@ export default function GamePage() {
   function onConfirmed(confirmed: boolean) {
     setShowConfirm(false);
 
-    if (!confirmed) {
+    if (!confirmed || decision === 0) {
       return;
     }
 
@@ -52,6 +56,14 @@ export default function GamePage() {
     } else {
       post.passes++;
     }
+
+    recordStats({
+      post,
+      decision,
+      timeTaken: new Date().getTime() - startTime,
+    });
+
+    setStartTime(new Date().getTime());
 
     navigate(`/game/${index}/results?decision=${decision}`);
   }
