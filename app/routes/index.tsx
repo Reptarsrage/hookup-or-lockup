@@ -4,21 +4,45 @@ import {
   useSpringRef,
   useSprings,
 } from "@react-spring/web";
+import type { HeadersFunction } from "@remix-run/server-runtime";
+import type { V2_ErrorBoundaryComponent } from "@remix-run/server-runtime/dist/routeModules";
 
 import { useEffect, useState } from "react";
 import clsx from "clsx";
-import { useNavigate } from "@remix-run/react";
+import {
+  isRouteErrorResponse,
+  useNavigate,
+  useRouteError,
+} from "@remix-run/react";
 
-import Error from "../components/Error";
 import SlideOne from "../components/SlideOne";
 import SlideTwo from "../components/SlideTwo";
 import SlideThree from "../components/SlideThree";
+import NotFound from "~/components/NotFound";
+import ErrorElt from "~/components/Error";
 
 const slides = [SlideOne, SlideTwo, SlideThree];
 
-export function ErrorBoundary() {
-  return <Error />;
-}
+export const headers: HeadersFunction = () => ({
+  "Cache-Control": "max-age=300, s-maxage=3600",
+});
+
+export const ErrorBoundary: V2_ErrorBoundaryComponent = () => {
+  const error = useRouteError();
+  if (isRouteErrorResponse(error) && error.status === 404) {
+    return <NotFound />;
+  }
+
+  // Don't forget to typecheck with your own logic.
+  // Any value can be thrown, not just errors!
+  let errorMessage = "Unknown error";
+  if (error instanceof Error) {
+    errorMessage = error.message;
+  }
+
+  console.error(errorMessage);
+  return <ErrorElt />;
+};
 
 export default function Index() {
   const navigate = useNavigate();
