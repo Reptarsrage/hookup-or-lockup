@@ -1,4 +1,5 @@
-import type { LoaderArgs } from "@remix-run/node";
+import type { HeadersFunction, LoaderArgs } from "@remix-run/node";
+import type { V2_ErrorBoundaryComponent } from "@remix-run/server-runtime/dist/routeModules";
 import { json } from "@remix-run/node";
 import {
   Outlet,
@@ -10,6 +11,11 @@ import {
 import { getPosts } from "~/models/post.server";
 import ErrorElt from "~/components/Error";
 import NotFound from "~/components/NotFound";
+import cache from "~/cache";
+
+export const headers: HeadersFunction = () => ({
+  "Cache-Control": "max-age=300, s-maxage=3600",
+});
 
 /**
  * Page size when fetching data
@@ -30,11 +36,21 @@ export async function loader({ params }: LoaderArgs) {
   }
 
   const page = (index % PAGE_SIZE) + 1; // 1-based indexing
+
+  if (cache.has(page)) {
+    return json(cache.get(page));
+  }
+
   const response = await getPosts(page, PAGE_SIZE);
-  return json(response);
+  cache.set(page, response);
+  return json(response, {
+    headers: {
+      "Cache-Control": "max-age=300, s-maxage=3600",
+    },
+  });
 }
 
-export function ErrorBoundary() {
+export const ErrorBoundary: V2_ErrorBoundaryComponent = () => {
   const error = useRouteError();
   if (isRouteErrorResponse(error) && error.status === 404) {
     return <NotFound />;
@@ -49,7 +65,7 @@ export function ErrorBoundary() {
 
   console.error(errorMessage);
   return <ErrorElt />;
-}
+};
 
 export default function GameLayout() {
   useLoaderData<typeof loader>(); // used in child routes
