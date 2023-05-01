@@ -34,7 +34,7 @@ export default function Game({
   return (
     <div className="flex flex-1 flex-col items-center justify-center gap-4 overflow-hidden p-4 md:gap-8 md:p-8">
       {/* Counter */}
-      <span className="text-xl text-gray-dark">
+      <span className="text-xl text-red-darker dark:text-gray-dark">
         <b>
           <Number value={index + 1} />
         </b>{" "}
@@ -48,7 +48,7 @@ export default function Game({
         {/* Profile card (desktop) */}
         <div
           data-testid="card"
-          className="flex aspect-h-video max-w-sm flex-col justify-stretch overflow-hidden rounded-xl bg-blue-dark shadow-lg md:aspect-video md:max-w-4xl md:flex-row"
+          className="flex aspect-h-video max-w-sm flex-col justify-stretch overflow-hidden rounded-xl bg-pink shadow-lg dark:bg-blue-dark md:aspect-video md:max-w-4xl md:flex-row"
         >
           <div className="relative flex h-1/2 items-end md:aspect-h-video md:h-full">
             <img
@@ -56,16 +56,16 @@ export default function Game({
               alt={post.title}
               className="absolute left-0 top-0 z-0 h-full w-full object-cover object-top"
             />
-            <h1 className="z-10 w-full bg-gradient-to-t from-black p-4 text-center text-4xl font-bold text-blue-lighter md:hidden">
+            <h1 className="z-10 w-full bg-gradient-to-t from-red-darker p-4 text-center text-4xl font-bold text-pink dark:from-black dark:text-blue-lighter md:hidden">
               {post.title}
             </h1>
           </div>
           <div className="flex flex-1 flex-col overflow-hidden p-8">
-            <h1 className="mb-4 hidden text-4xl font-bold text-blue-lighter md:block">
+            <h1 className="mb-4 hidden text-4xl font-bold text-red-dark dark:text-blue-lighter md:block">
               {post.title}
             </h1>
             {/* TODO: Tags? */}
-            <p className="flex-1 overflow-auto text-sm text-blue-lighter">
+            <p className="flex-1 overflow-auto text-sm text-red-dark dark:text-blue-lighter">
               {post.description}
             </p>
           </div>
@@ -84,7 +84,7 @@ export default function Game({
           <span className="ml-4 hidden md:inline">Lockup</span>
         </button>
 
-        <span className="text-3xl font-bold uppercase italic text-gray-dark md:text-4xl">
+        <span className="text-3xl font-bold uppercase italic text-red-darker dark:text-gray-dark md:text-4xl">
           Or
         </span>
 
