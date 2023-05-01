@@ -96,7 +96,7 @@ export default function Index() {
   }, [index, transRef, paginationApi]);
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center">
+    <main className="flex min-h-screen flex-col items-center justify-center bg-black">
       <div className="flex h-screen w-screen flex-col rounded-xl bg-blue-light px-8 py-16 text-white shadow-xl md:h-[800px] md:w-[600px]">
         <div className="relative flex flex-1 flex-col overflow-hidden">
           {transitions((style, i) => {

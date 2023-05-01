@@ -12,7 +12,7 @@ export default function GameOverPage() {
 
   return (
     <>
-      <main className="mb-16 max-w-xs text-center text-blue-lighter">
+      <main className="mb-16 max-w-xs text-center text-pink dark:text-blue-lighter">
         <h1 className="mb-8 text-5xl font-bold uppercase">Game Over</h1>
         <h2 className="mb-4 font-bold">
           You swiped through the entire database of people we have!
