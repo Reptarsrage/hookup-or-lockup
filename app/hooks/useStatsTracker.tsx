@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import superjson from "superjson";
 import type { PostWithImageAndStats } from "~/models/post.server";
 
@@ -33,5 +33,10 @@ export default function useStatsTracker() {
     setStats(newStats);
   }
 
-  return { stats, recordStats };
+  function clearStats() {
+    window.sessionStorage.setItem("stats", superjson.stringify([]));
+    setStats([]);
+  }
+
+  return useMemo(() => ({ stats, recordStats, clearStats }), [stats]);
 }

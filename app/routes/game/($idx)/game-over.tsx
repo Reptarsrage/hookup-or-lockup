@@ -1,6 +1,15 @@
-import { Link } from "@remix-run/react";
+import { Link, useNavigate } from "@remix-run/react";
+import useStatsTracker from "~/hooks/useStatsTracker";
 
 export default function GameOverPage() {
+  const navigate = useNavigate();
+  const { clearStats } = useStatsTracker();
+
+  function startOver() {
+    clearStats();
+    navigate("/game");
+  }
+
   return (
     <>
       <main className="mb-16 max-w-xs text-center text-blue-lighter">
@@ -21,12 +30,12 @@ export default function GameOverPage() {
           Your stats
         </Link>
 
-        <Link
+        <button
           className="rounded-2xl bg-pink px-12 py-4 text-white outline-none transition-opacity duration-300 hover:bg-pink-light"
-          to="/game/global-stats?returnUrl=/game/game-over"
+          onClick={startOver}
         >
-          Global Stats
-        </Link>
+          Start Over
+        </button>
       </footer>
     </>
   );
