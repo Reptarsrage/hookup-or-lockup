@@ -60,7 +60,7 @@ export default function Game({
               {post.title}
             </h1>
           </div>
-          <div className="flex flex-1 flex-col overflow-hidden p-8">
+          <div className="flex flex-1 flex-col overflow-hidden p-2 md:p-8">
             <h1 className="mb-4 hidden text-4xl font-bold text-red-dark dark:text-blue-lighter md:block">
               {post.title}
             </h1>
