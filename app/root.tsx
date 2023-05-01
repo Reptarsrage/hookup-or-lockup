@@ -27,7 +27,7 @@ export const meta: V2_MetaFunction = () => [
   { title: "Hookup or Lockup" },
   {
     name: "viewport",
-    content: "width=device-width,initial-scale=1;",
+    content: "width=device-width,initial-scale=1",
   },
 ];
 
@@ -35,7 +35,7 @@ export default function App() {
   useTheme();
 
   return (
-    <html lang="en" className="h-full">
+    <html lang="en" className="dark h-full">
       <head>
         <Meta />
         <Links />

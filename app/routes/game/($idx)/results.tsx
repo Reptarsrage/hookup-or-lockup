@@ -39,7 +39,7 @@ export default function ResultsPage() {
     return redirect("/game");
   }
 
-  const post = parentData.posts[index];
+  const post = parentData.posts[index % parentData.posts.length];
   const choseLockedUp = decision === -1;
   const isCorrect = choseLockedUp === post.lockedUp;
   const returnUrl = `${location.pathname}${location.search}`;

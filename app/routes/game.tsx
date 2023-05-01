@@ -38,9 +38,11 @@ export async function loader({ params }: LoaderArgs) {
     throw new Response("Not found", { status: 404 });
   }
 
-  const page = (index % PAGE_SIZE) + 1; // 1-based indexing
+  const page = Math.floor(index / PAGE_SIZE) + 1; // 1-based indexing
+  console.warn("PAGE " + page + " LOADED", { index, PAGE_SIZE });
 
   if (cache.has(page)) {
+    console.warn("CACHED");
     return json(cache.get(page));
   }
 
@@ -81,13 +83,17 @@ export default function GameLayout() {
 
   return (
     <div className="flex h-full flex-col items-center justify-center overflow-hidden p-4 md:p-8">
-      <button onClick={toggleTheme} className="absolute left-2 top-1">
+      <button
+        onClick={toggleTheme}
+        className="absolute left-2 top-1 hidden md:block"
+      >
         {theme === "dark" ? (
           <MoonIcon className="inline h-12 w-12 md:h-8 md:w-8" />
         ) : (
           <SunIcon className="inline h-12 w-12 md:h-8 md:w-8" />
         )}
       </button>
+
       <Outlet />
     </div>
   );

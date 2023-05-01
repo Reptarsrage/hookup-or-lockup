@@ -30,7 +30,7 @@ function useTheme(): [Theme, (theme: Theme) => void] {
 
   useEffect(() => {
     const chosenTheme = getTheme();
-    if (chosenTheme === "dark" || prefersDark) {
+    if (chosenTheme === "dark" || (chosenTheme === undefined && prefersDark)) {
       document.documentElement.classList.add("dark");
     } else {
       document.documentElement.classList.remove("dark");

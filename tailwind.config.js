@@ -23,7 +23,8 @@ module.exports = {
     },
     extend: {
       aspectRatio: {
-        "h-video": "9 / 16",
+        card: "9 / 6",
+        "h-card": "6 / 9",
       },
     },
   },

@@ -18,7 +18,7 @@ export default function GamePage() {
   const { total, posts } = useParentData();
 
   const index = useRouteIndex();
-  const post = posts[index];
+  const post = posts[index % posts.length];
 
   const [decision, setDecision] = useState<Decision | Undecided>(0);
   const [showConfirm, setShowConfirm] = useState(false);
@@ -39,7 +39,7 @@ export default function GamePage() {
     }
 
     // record smash/pass
-    const postId = posts[index].id;
+    const postId = posts[index % posts.length].id;
     const action = decision === 1 ? `/smash/${postId}` : `/pass/${postId}`;
     smasherAndPasser.submit(
       {},
