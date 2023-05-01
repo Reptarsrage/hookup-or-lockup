@@ -31,7 +31,7 @@ export default function GamePage() {
     setShowConfirm(true);
   }
 
-  function onConfirmed(confirmed: boolean) {
+  async function onConfirmed(confirmed: boolean) {
     setShowConfirm(false);
 
     if (!confirmed || decision === 0) {
@@ -65,7 +65,11 @@ export default function GamePage() {
 
     setStartTime(new Date().getTime());
 
-    navigate(`/game/${index}/results?decision=${decision}`);
+    // attempt to give time for the stats to be recorded
+    setTimeout(
+      () => navigate(`/game/${index}/results?decision=${decision}`),
+      100
+    );
   }
 
   return (
