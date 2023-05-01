@@ -9,13 +9,11 @@ import {
 } from "@remix-run/react";
 
 import tailwindStylesheetUrl from "./styles/tailwind.css";
-import indexStylesheetUrl from "./styles/index.css";
 import useTheme from "./hooks/useTheme";
 
 export const links: LinksFunction = () => {
   return [
     { rel: "stylesheet", href: tailwindStylesheetUrl },
-    { rel: "stylesheet", href: indexStylesheetUrl },
     { rel: "preconnect", href: "https://fonts.gstatic.com" },
     {
       rel: "stylesheet",
@@ -24,13 +22,14 @@ export const links: LinksFunction = () => {
   ];
 };
 
-export const meta: V2_MetaFunction = () => {
-  return [
-    { charset: "utf-8" },
-    { title: "Hookup or Lockup" },
-    { viewport: "width=device-width,initial-scale=1" },
-  ];
-};
+export const meta: V2_MetaFunction = () => [
+  { charset: "utf-8" },
+  { title: "Hookup or Lockup" },
+  {
+    name: "viewport",
+    content: "width=device-width,initial-scale=1;",
+  },
+];
 
 export default function App() {
   useTheme();
