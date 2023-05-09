@@ -83,7 +83,7 @@
     "@commitlint/config-conventional": "^17.4.2",
     "@remix-run/dev": "^1.9.0",
     "@remix-run/eslint-config": "^1.9.0",
-    "@svgr/cli": "^7.0.0",
+    "@svgr/cli": "^8.0.0",
     "@svgr/plugin-jsx": "^7.0.0",
     "@svgr/plugin-prettier": "^7.0.0",
     "@svgr/plugin-svgo": "^7.0.0",
