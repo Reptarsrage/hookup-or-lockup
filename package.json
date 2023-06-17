@@ -69,7 +69,7 @@
     "clsx": "^1.2.1",
     "html-to-text": "^9.0.3",
     "isbot": "^3.6.3",
-    "lru-cache": "^9.1.1",
+    "lru-cache": "^10.0.0",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
     "react-confetti": "^6.1.0",
