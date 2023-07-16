@@ -66,7 +66,7 @@
     "@remix-run/server-runtime": "^1.9.0",
     "@use-gesture/react": "^10.2.23",
     "axios": "^1.2.2",
-    "clsx": "^1.2.1",
+    "clsx": "^2.0.0",
     "html-to-text": "^9.0.3",
     "isbot": "^3.6.3",
     "lru-cache": "^10.0.0",
