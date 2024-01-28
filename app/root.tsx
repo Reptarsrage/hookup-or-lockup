@@ -1,4 +1,8 @@
-import type { LinksFunction, V2_MetaFunction } from "@remix-run/node";
+import type {
+  LinksFunction,
+  V2_MetaFunction,
+  LoaderFunction,
+} from "@remix-run/node";
 import {
   Links,
   LiveReload,
@@ -8,7 +12,6 @@ import {
   ScrollRestoration,
   useLoaderData,
 } from "@remix-run/react";
-import type { LoaderFunction } from "@remix-run/node";
 
 import type { Theme } from "./themeProvider";
 import { getThemeSession } from "./theme.server";
