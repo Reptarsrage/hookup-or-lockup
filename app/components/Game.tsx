@@ -3,6 +3,9 @@ import { useState } from "react";
 import type { PostWithImageAndStats } from "~/models/post.server";
 import Number from "~/components/Number";
 import { AyYo, OhNo } from "~/components/icons";
+import SunIcon from "~/components/icons/Sun";
+import MoonIcon from "~/components/icons/Moon";
+import { useTheme, Theme } from "~/themeProvider";
 
 type Decision = -1 | 1;
 
@@ -20,6 +23,7 @@ export default function Game({
   total,
 }: GameProps) {
   const [interactable] = useState(true);
+  const [theme, setTheme] = useTheme();
 
   function ohNo() {
     onDecisionMade(-1);
@@ -29,19 +33,35 @@ export default function Game({
     onDecisionMade(1);
   }
 
+  function toggleTheme() {
+    setTheme((prevTheme) =>
+      prevTheme === Theme.LIGHT ? Theme.DARK : Theme.LIGHT
+    );
+  }
+
   // TODO: Loading skeleton
 
   return (
     <div className="flex flex-1 flex-col items-center justify-center gap-4 overflow-hidden md:gap-8">
       {/* Counter */}
-      <div className="w-full text-right text-xl text-red-darker dark:text-gray-dark md:text-center">
-        <b>
-          <Number value={index + 1} />
-        </b>{" "}
-        {" of "}
-        <b>
-          <Number value={total} />
-        </b>
+      <div className="flex w-full justify-between text-xl text-red-darker dark:text-gray-dark md:text-center">
+        <button onClick={toggleTheme}>
+          {theme === Theme.DARK ? (
+            <MoonIcon className="inline h-8 w-8" />
+          ) : (
+            <SunIcon className="inline h-8 w-8" />
+          )}
+        </button>
+
+        <span>
+          <b>
+            <Number value={index + 1} />
+          </b>
+          {" of "}
+          <b>
+            <Number value={total} />
+          </b>
+        </span>
       </div>
 
       {/* Profile card (desktop) */}

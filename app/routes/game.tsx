@@ -14,8 +14,7 @@ import NotFound from "~/components/NotFound";
 import SunIcon from "~/components/icons/Sun";
 import MoonIcon from "~/components/icons/Moon";
 import cache from "~/cache";
-import { useTheme } from "~/themeProvider";
-import { Theme } from "~/themeProvider";
+import { useTheme, Theme } from "~/themeProvider";
 
 export const headers: HeadersFunction = () => ({
   "Cache-Control": "max-age=300, s-maxage=3600",

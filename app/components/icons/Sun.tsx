@@ -6,7 +6,6 @@ const SvgSun = (props: SVGProps<SVGSVGElement>) => (
     fill="none"
     stroke="currentColor"
     strokeWidth={1.5}
-    className="h-6 w-6"
     viewBox="0 0 24 24"
     {...props}
   >
