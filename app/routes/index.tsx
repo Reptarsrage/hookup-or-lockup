@@ -65,7 +65,7 @@ export default function Index() {
     slides.length,
     (i) => ({
       width: i === index ? 24 : 8,
-    })
+    }),
   );
 
   /**
@@ -96,8 +96,8 @@ export default function Index() {
   }, [index, transRef, paginationApi]);
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-black">
-      <div className="flex h-screen w-screen flex-col rounded-xl bg-blue-light px-8 py-16 text-white shadow-xl md:h-[800px] md:w-[600px]">
+    <main className="flex flex-1 flex-col items-center justify-center bg-black">
+      <div className="flex flex-col flex-1 w-full md:rounded-xl bg-blue-light px-8 py-16 text-white shadow-xl md:h-[800px] md:w-[600px] md:flex-none">
         <div className="relative flex flex-1 flex-col overflow-hidden">
           {transitions((style, i) => {
             const Slide = slides[i];
@@ -127,7 +127,7 @@ export default function Index() {
               key={i}
               className={clsx(
                 "h-2 w-2 rounded-full shadow-sm",
-                i === index ? "bg-pink" : "bg-white opacity-20"
+                i === index ? "bg-pink" : "bg-white opacity-20",
               )}
               style={style}
             />

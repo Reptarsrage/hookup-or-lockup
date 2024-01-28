@@ -11,10 +11,7 @@ import {
 import { getPosts } from "~/models/post.server";
 import ErrorElt from "~/components/Error";
 import NotFound from "~/components/NotFound";
-import SunIcon from "~/components/icons/Sun";
-import MoonIcon from "~/components/icons/Moon";
 import cache from "~/cache";
-import { useTheme, Theme } from "~/themeProvider";
 
 export const headers: HeadersFunction = () => ({
   "Cache-Control": "max-age=300, s-maxage=3600",
@@ -72,27 +69,8 @@ export const ErrorBoundary: V2_ErrorBoundaryComponent = () => {
 export default function GameLayout() {
   useLoaderData<typeof loader>(); // used in child routes
 
-  const [theme, setTheme] = useTheme();
-
-  function toggleTheme() {
-    setTheme((prevTheme) =>
-      prevTheme === Theme.LIGHT ? Theme.DARK : Theme.LIGHT
-    );
-  }
-
   return (
-    <div className="flex h-full flex-col items-center justify-center overflow-hidden p-4 md:p-8">
-      <button
-        onClick={toggleTheme}
-        className="absolute left-2 top-1 hidden md:block"
-      >
-        {theme === Theme.DARK ? (
-          <MoonIcon className="inline h-12 w-12 md:h-8 md:w-8" />
-        ) : (
-          <SunIcon className="inline h-12 w-12 md:h-8 md:w-8" />
-        )}
-      </button>
-
+    <div className="flex flex-auto flex-col items-center justify-center max-h-full overflow-hidden p-4 md:p-8">
       <Outlet />
     </div>
   );

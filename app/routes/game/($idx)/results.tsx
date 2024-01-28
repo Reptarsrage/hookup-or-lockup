@@ -30,9 +30,9 @@ export default function ResultsPage() {
         (stats.filter((stat) => (stat.decision === -1) === stat.post.lockedUp)
           .length /
           stats.length) *
-          100.0
+          100.0,
       ),
-    [stats]
+    [stats],
   );
 
   if (decision === 0) {
@@ -53,20 +53,19 @@ export default function ResultsPage() {
         numberOfPieces={100}
       />
 
-      <div className="flex w-full max-w-xl flex-col items-center justify-center gap-4 md:gap-8">
-        <main className="flex w-full flex-col items-center justify-center overflow-hidden rounded-2xl bg-white p-4 shadow-lg md:max-w-xl md:p-8">
-          <h1 className="mb-2 font-sans text-3xl font-bold uppercase text-black">
+      <div className="flex flex-auto w-full max-w-xl flex-col items-center justify-center gap-4 md:gap-8">
+        <main className="flex w-full flex-auto flex-col items-center justify-center overflow-hidden rounded-2xl bg-white p-4 shadow-lg md:max-w-xl md:p-8">
+          <h1 className="md:mb-2 font-sans text-3xl font-bold uppercase text-black">
             Results
           </h1>
           <h3 className="text-2xl font-bold text-red-dark">
             {isCorrect ? "Correct!" : "Incorrect!"}
           </h3>
 
-          <div className="my-2 aspect-square max-w-xs overflow-hidden rounded-xl md:my-4">
-            <img
-              src={post.image}
-              alt={post.title}
-              className="h-full w-full object-cover object-top"
+          <div className="flex w-full my-2 flex-auto md:my-4 justify-center items-center">
+            <div
+              className="h-48 w-48 rounded-full bg-cover bg-top bg-no-repeat"
+              style={{ backgroundImage: `url("${post.image}")` }}
             />
           </div>
 

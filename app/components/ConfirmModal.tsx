@@ -37,34 +37,26 @@ function ConfirmModal({
           item && (
             <animated.div
               style={style}
-              className="bg-[rgba(0, 0, 0, 0.4)] fixed inset-0 z-20 backdrop-blur-md"
+              className="bg-[rgba(0, 0, 0, 0.4)] fixed top-0 left-0 h-full w-full  z-20 backdrop-blur-md"
             />
-          )
+          ),
       )}
 
       {/* Modal */}
       {modalTransitions(
         (style, item) =>
           item && (
-            <div className="fixed inset-0 z-30 flex items-center justify-center">
+            <div className="fixed top-0 h-full w-full left-0  z-30 flex items-center justify-center">
               <animated.div
                 style={style}
-                className="relative flex h-screen w-screen flex-col overflow-hidden bg-white text-black shadow-xl md:h-auto md:w-[400px] md:rounded-xl"
+                className="relative flex h-full w-full flex-col overflow-hidden bg-white text-black shadow-xl md:h-auto md:w-[400px] md:rounded-xl"
               >
-                <button
-                  onClick={onCancelled}
-                  disabled={!open}
-                  className="absolute right-2 top-1 cursor-pointer text-5xl text-gray hover:text-gray-light md:text-4xl"
-                >
-                  ×
-                </button>
-
-                <div className="flex-1 flex-col px-8 py-16">
+                <div className="flex-1 flex-col p-4 md:p-8">
                   <div className="text-center text-3xl md:text-xl">
                     You guessed {post.title} is
                     <b
                       className={clsx(
-                        decision < 0 ? "text-blue-light" : "text-red"
+                        decision < 0 ? "text-blue-light" : "text-red",
                       )}
                     >
                       {decision > 0 ? " not in jail" : " in jail "}
@@ -97,7 +89,7 @@ function ConfirmModal({
                 </div>
               </animated.div>
             </div>
-          )
+          ),
       )}
     </>
   );

@@ -6,7 +6,7 @@ const SvgMoon = (props: SVGProps<SVGSVGElement>) => (
     fill="none"
     stroke="currentColor"
     strokeWidth={1.5}
-    className="h-6 w-6"
+    className="w-6 h-6"
     viewBox="0 0 24 24"
     {...props}
   >

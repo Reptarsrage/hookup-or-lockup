@@ -17,14 +17,14 @@ export default function UserStatsPage() {
         (stats.filter((stat) => (stat.decision === -1) === stat.post.lockedUp)
           .length /
           stats.length) *
-          100.0
+          100.0,
       ),
       averageTimeTaken:
         stats.reduce((acc, stat) => acc + stat.timeTaken, 0) /
         stats.length /
         1000.0,
     }),
-    [stats]
+    [stats],
   );
 
   return (
@@ -37,34 +37,40 @@ export default function UserStatsPage() {
         <h3 className="mb-4 text-xl text-gray">So far you guessed...</h3>
 
         <div className="flex w-full flex-col gap-8 p-4 md:flex-row md:justify-between">
-          <div className="flex flex-col items-center">
+          <div className="flex md:flex-col items-center">
             <div className="mb-4 flex h-32 w-32 items-center justify-center rounded-full bg-blue-light">
               <span className="text-[48px] font-bold text-blue-dark">
                 <Number value={lockups} />
               </span>
             </div>
-            <h5 className="text-2xl font-bold text-blue-dark">Lockup</h5>
-            <p className="text-sm text-gray">are in jail</p>
+            <div className="pl-4 md:pl-0 md:text-center">
+              <h5 className="text-2xl font-bold text-blue-dark">Lockup</h5>
+              <p className="text-sm text-gray">are in jail</p>
+            </div>
           </div>
 
-          <div className="flex flex-col items-center">
+          <div className="flex md:flex-col items-center">
             <div className="mb-4 flex h-32 w-32 items-center justify-center rounded-full bg-gray-light">
               <span className="text-[48px] font-bold text-black">
                 <Number value={percentCorrect} />%
               </span>
             </div>
-            <h5 className="text-2xl font-bold text-black">Correct</h5>
-            <p className="text-sm text-gray">guessed correctly</p>
+            <div className="pl-4 md:pl-0 md:text-center">
+              <h5 className="text-2xl font-bold text-black">Correct</h5>
+              <p className="text-sm text-gray">guessed correctly</p>
+            </div>
           </div>
 
-          <div className="flex flex-col items-center">
+          <div className="flex md:flex-col items-center">
             <div className="mb-4 flex h-32 w-32 items-center justify-center rounded-full bg-pink-light">
               <span className="text-[48px] font-bold text-red-dark">
                 <Number value={hookups} />
               </span>
             </div>
-            <h5 className="text-2xl font-bold text-red-dark">Hookup</h5>
-            <p className="text-sm text-gray">are on dating apps</p>
+            <div className="pl-4 md:pl-0 md:text-center">
+              <h5 className="text-2xl font-bold text-red-dark">Hookup</h5>
+              <p className="text-sm text-gray">are on dating apps</p>
+            </div>
           </div>
         </div>
 

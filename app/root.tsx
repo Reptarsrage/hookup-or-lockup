@@ -15,6 +15,7 @@ import {
 
 import type { Theme } from "./themeProvider";
 import { getThemeSession } from "./theme.server";
+import globalStylesheetUrl from "./styles/global.css";
 import tailwindStylesheetUrl from "./styles/tailwind.css";
 import {
   NonFlashOfWrongThemeEls,
@@ -40,6 +41,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 export const links: LinksFunction = () => {
   return [
     { rel: "stylesheet", href: tailwindStylesheetUrl },
+    { rel: "stylesheet", href: globalStylesheetUrl },
     { rel: "preconnect", href: "https://fonts.gstatic.com" },
     {
       rel: "stylesheet",
@@ -62,13 +64,13 @@ function App() {
   const [theme] = useTheme();
 
   return (
-    <html lang="en" className={clsx("h-full", theme)}>
+    <html lang="en" className={clsx(theme)}>
       <head>
         <Meta />
         <Links />
         <NonFlashOfWrongThemeEls ssrTheme={Boolean(data.theme)} />
       </head>
-      <body className="h-full bg-red-dark font-sans text-pink dark:bg-black dark:text-blue-lighter">
+      <body className="bg-red-dark font-sans text-pink dark:bg-black dark:text-blue-lighter flex flex-col">
         <Outlet />
         <ScrollRestoration />
         <Scripts />
