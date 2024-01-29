@@ -60,10 +60,7 @@ function getInstance() {
 }
 
 // see: https://developer.wordpress.org/rest-api/reference/posts/#list-posts
-export async function fetchPosts(
-  page: number = 1,
-  perPage: number = 10
-): Promise<Posts> {
+export async function fetchPosts(page = 1, perPage = 10): Promise<Posts> {
   const axios = getInstance();
 
   const url = "/stage/wp-json/wp/v2/posts";
@@ -75,7 +72,7 @@ export async function fetchPosts(
   params.set("order", "asc");
 
   const response = await axios.get<WordpressPost[]>(
-    `${url}?${params.toString()}`
+    `${url}?${params.toString()}`,
   );
 
   const posts = response.data.map(
@@ -85,7 +82,7 @@ export async function fetchPosts(
       description: content.rendered,
       imageId: featured_media,
       lockedUp: categories.includes(JAIL_CATEGORY),
-    })
+    }),
   );
 
   const headersTotal = response.headers["x-wp-total"];
@@ -110,7 +107,7 @@ export async function fetchMedias(mediaIds: number[]): Promise<Media[]> {
   params.set("include", mediaIds.join(","));
 
   const response = await axios.get<WordpressMedia[]>(
-    `${url}?${params.toString()}`
+    `${url}?${params.toString()}`,
   );
   return response.data.map(({ id, post, source_url }) => ({
     id,

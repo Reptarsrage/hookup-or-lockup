@@ -1,12 +1,13 @@
 import { useFetcher, useNavigate } from "@remix-run/react";
 import { redirect } from "@remix-run/server-runtime";
 import { useContext, useState } from "react";
+import invariant from "tiny-invariant";
 
 import ConfirmModal from "~/components/ConfirmModal";
 import Game from "~/components/Game";
+import { StatsContext } from "~/context/statsContext";
 import useParentData from "~/hooks/useParentData";
 import useRouteIndex from "~/hooks/useRouteIndex";
-import { StatsContext } from "~/context/statsContext";
 
 type Undecided = 0;
 type Decision = -1 | 1;
@@ -23,7 +24,10 @@ export default function GamePage() {
   const [decision, setDecision] = useState<Decision | Undecided>(0);
   const [showConfirm, setShowConfirm] = useState(false);
 
-  const { recordStats } = useContext(StatsContext);
+  const ctx = useContext(StatsContext);
+  invariant(ctx, "stats context uninitialized");
+  const { recordStats } = ctx;
+
   const [startTime, setStartTime] = useState(new Date().getTime());
 
   function onDecisionMade(decision: Decision) {

@@ -1,8 +1,8 @@
-import type { ActionArgs } from "@remix-run/node"; // or cloudflare/deno
-import { json } from "@remix-run/node"; // or cloudflare/deno
+import { ActionFunctionArgs, json } from "@remix-run/node"; // or cloudflare/deno
+
 import { hasPost, pass } from "~/models/post.server";
 
-export const action = async ({ request, params }: ActionArgs) => {
+export const action = async ({ request, params }: ActionFunctionArgs) => {
   if (request.method !== "PATCH") {
     throw json("Method Not Supported", { status: 415 });
   }

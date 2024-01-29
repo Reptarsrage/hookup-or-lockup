@@ -2,8 +2,8 @@ import type { Post } from "@prisma/client";
 import { convert } from "html-to-text";
 import invariant from "tiny-invariant";
 
-import { prisma } from "~/db.server";
 import { fetchPosts, fetchMedias } from "~/api.server";
+import { prisma } from "~/db.server";
 
 export type { Post } from "@prisma/client";
 
@@ -26,10 +26,7 @@ export interface Page {
   posts: PostWithImageAndStats[];
 }
 
-export async function getPosts(
-  page: number = 1,
-  limit: number = 10
-): Promise<Page> {
+export async function getPosts(page = 1, limit = 10): Promise<Page> {
   // Fetch page of posts
   const { posts, total, totalPages } = await fetchPosts(page, limit);
   const mediaIds = posts.map((post) => post.imageId);
@@ -66,7 +63,7 @@ export async function getPosts(
         passes,
         totalVotes: passes + smashes,
       };
-    }
+    },
   );
 
   // Add missing posts to db
@@ -78,8 +75,8 @@ export async function getPosts(
           smashes: 0,
           passes: 0,
         },
-      })
-    )
+      }),
+    ),
   );
 
   return {

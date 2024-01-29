@@ -1,9 +1,9 @@
 import clsx from "clsx";
 import { forwardRef } from "react";
 
-type NumberProps = {
+interface NumberProps {
   value: number;
-};
+}
 
 const Number = forwardRef<
   HTMLSpanElement,

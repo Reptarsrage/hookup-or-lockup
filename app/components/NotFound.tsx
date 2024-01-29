@@ -5,7 +5,7 @@ export default function NotFound() {
         <h1 className="mb-8 text-5xl font-bold uppercase">Error 404</h1>
         <h2 className="mb-4 font-bold">Page Not Found</h2>
         <p>
-          The URL you used doesn't exist.
+          The URL you used doesn&apos;t exist.
           <br />
           Honestly it might be a skill issue.
         </p>

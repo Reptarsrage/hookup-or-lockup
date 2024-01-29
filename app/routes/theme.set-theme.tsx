@@ -1,8 +1,8 @@
 import { json } from "@remix-run/node";
 import type { ActionFunction } from "@remix-run/node";
 
+import { isTheme } from "~/context/themeProvider";
 import { getThemeSession } from "~/theme.server";
-import { isTheme } from "~/themeProvider";
 
 export const action: ActionFunction = async ({ request }) => {
   const themeSession = await getThemeSession(request);
@@ -20,6 +20,6 @@ export const action: ActionFunction = async ({ request }) => {
   themeSession.setTheme(theme);
   return json(
     { success: true },
-    { headers: { "Set-Cookie": await themeSession.commit() } }
+    { headers: { "Set-Cookie": await themeSession.commit() } },
   );
 };

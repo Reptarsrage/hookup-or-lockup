@@ -69,7 +69,7 @@ function ThemeProvider({
 
     persistThemeRef.current.submit(
       { theme },
-      { action: "theme/set-theme", method: "post" }
+      { action: "theme/set-theme", method: "post" },
     );
   }, [theme]);
 
@@ -107,7 +107,7 @@ function NonFlashOfWrongThemeEls({ ssrTheme }: { ssrTheme: boolean }) {
   );
 }
 
-const themes: Array<Theme> = Object.values(Theme);
+const themes: Theme[] = Object.values(Theme);
 
 function isTheme(value: unknown): value is Theme {
   return typeof value === "string" && themes.includes(value as Theme);

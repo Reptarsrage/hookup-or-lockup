@@ -4,22 +4,21 @@ import {
   useSpringRef,
   useSprings,
 } from "@react-spring/web";
-import type { HeadersFunction } from "@remix-run/server-runtime";
-import type { V2_ErrorBoundaryComponent } from "@remix-run/server-runtime/dist/routeModules";
-
-import { useEffect, useState } from "react";
-import clsx from "clsx";
 import {
   isRouteErrorResponse,
   useNavigate,
   useRouteError,
 } from "@remix-run/react";
+import type { HeadersFunction } from "@remix-run/server-runtime";
+import clsx from "clsx";
+import { useEffect, useState } from "react";
+
+import ErrorElt from "~/components/Error";
+import NotFound from "~/components/NotFound";
 
 import SlideOne from "../components/SlideOne";
-import SlideTwo from "../components/SlideTwo";
 import SlideThree from "../components/SlideThree";
-import NotFound from "~/components/NotFound";
-import ErrorElt from "~/components/Error";
+import SlideTwo from "../components/SlideTwo";
 
 const slides = [SlideOne, SlideTwo, SlideThree];
 
@@ -27,7 +26,7 @@ export const headers: HeadersFunction = () => ({
   "Cache-Control": "max-age=300, s-maxage=3600",
 });
 
-export const ErrorBoundary: V2_ErrorBoundaryComponent = () => {
+export const ErrorBoundary = () => {
   const error = useRouteError();
   if (isRouteErrorResponse(error) && error.status === 404) {
     return <NotFound />;

@@ -1,3 +1,5 @@
+import "@faker-js/faker";
+
 describe("smoke tests", () => {
   it("should show welcome page with next button", () => {
     cy.visitAndCheck("/");

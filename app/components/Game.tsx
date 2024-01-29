@@ -1,17 +1,17 @@
-import { useState } from "react";
-import useToggle from "@react-hook/toggle";
 import { useMediaQuery } from "@react-hook/media-query";
-
-import type { PostWithImageAndStats } from "~/models/post.server";
-import { AyYo, OhNo } from "~/components/icons";
+import useToggle from "@react-hook/toggle";
 import clsx from "clsx";
+import { useState } from "react";
+
+import { AyYo, OhNo } from "~/components/icons";
+import type { PostWithImageAndStats } from "~/models/post.server";
 
 type Decision = -1 | 1;
 
-type GameProps = {
+interface GameProps {
   post: PostWithImageAndStats;
   onDecisionMade: (decision: Decision) => void;
-};
+}
 
 function MobileCard({ post }: { post: PostWithImageAndStats }) {
   const [flipped, flip] = useToggle(false, true);
@@ -23,6 +23,9 @@ function MobileCard({ post }: { post: PostWithImageAndStats }) {
           data-testid="card"
           className="bg-pink dark:bg-blue-dark text-red-dark dark:text-blue-lighter flex flex-col rounded-xl shadow-2xl overflow-hidden w-full"
           onClick={flip}
+          onKeyDown={flip}
+          tabIndex={0}
+          role="button"
         >
           <div
             className="flex flex-col flex-auto overflow-hidden relative bg-cover bg-top bg-no-repeat"

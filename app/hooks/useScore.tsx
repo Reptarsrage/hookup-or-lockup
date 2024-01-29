@@ -1,4 +1,6 @@
 import { useContext, useMemo } from "react";
+import invariant from "tiny-invariant";
+
 import { StatsContext, type Stats } from "../context/statsContext";
 
 export default function useScore() {
@@ -19,7 +21,10 @@ export default function useScore() {
     );
   }
 
-  const { stats } = useContext(StatsContext);
+  const ctx = useContext(StatsContext);
+  invariant(ctx, "stats context uninitialized");
+  const { stats } = ctx;
+
   return useMemo(
     () => ({
       numberGuessed: stats.length,

@@ -1,13 +1,14 @@
 import { animated, useTransition } from "@react-spring/web";
 import clsx from "clsx";
+
 import type { PostWithImageAndStats } from "~/models/post.server";
 
-type ConfirmModalProps = {
+interface ConfirmModalProps {
   open: boolean;
   decision: number;
   post: PostWithImageAndStats;
   onConfirmed: (confirmed: boolean) => void;
-};
+}
 
 function ConfirmModal({
   open,

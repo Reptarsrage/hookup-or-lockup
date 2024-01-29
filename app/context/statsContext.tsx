@@ -1,28 +1,27 @@
 import { createContext, useState } from "react";
-import superjson from "superjson";
+import * as SJSON from "superjson";
+
 import type { PostWithImageAndStats } from "~/models/post.server";
 
 type Decision = 1 | -1;
 
-export type Stats = {
+export interface Stats {
   post: PostWithImageAndStats;
   decision: Decision;
   timeTaken: number;
-};
+}
 
 export const StatsContext = createContext<{
   stats: Stats[];
   recordStats: (stat: Stats) => void;
   clearStats: () => void;
-}>({
-  stats: [],
-  recordStats: () => {},
-  clearStats: () => {},
-});
+} | null>(null);
 
-const StatsProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
+interface Props {
+  children: React.ReactNode;
+}
+
+const StatsProvider = ({ children }: Props) => {
   function getStatsList(): Stats[] {
     if (typeof window === "undefined") {
       // session storage is not available on the server
@@ -31,7 +30,7 @@ const StatsProvider: React.FC<{ children: React.ReactNode }> = ({
 
     const statsList = window.sessionStorage.getItem("stats");
     if (statsList) {
-      return superjson.parse<Stats[]>(statsList);
+      return SJSON.parse<Stats[]>(statsList);
     } else {
       return [];
     }
@@ -41,12 +40,12 @@ const StatsProvider: React.FC<{ children: React.ReactNode }> = ({
 
   function recordStats(stat: Stats) {
     const newStats = [...stats].concat(stat);
-    window.sessionStorage.setItem("stats", superjson.stringify(newStats));
+    window.sessionStorage.setItem("stats", SJSON.stringify(newStats));
     setStats(newStats);
   }
 
   function clearStats() {
-    window.sessionStorage.setItem("stats", superjson.stringify([]));
+    window.sessionStorage.setItem("stats", SJSON.stringify([]));
     setStats([]);
   }
 

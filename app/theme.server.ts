@@ -1,34 +1,32 @@
+import "dotenv/config";
 import { createCookieSessionStorage } from "@remix-run/node";
+import invariant from "tiny-invariant";
 
-import type { Theme } from "./themeProvider";
-import { isTheme } from "./themeProvider";
+import { isTheme, type Theme } from "./context/themeProvider";
 
-const sessionSecret = process.env.SESSION_SECRET;
-if (!sessionSecret) {
-  throw new Error("SESSION_SECRET must be set");
-}
+invariant(process.env.SESSION_SECRET, "SESSION_SECRET must be set");
 
-const themeStorage = createCookieSessionStorage({
+export const sessionStorage = createCookieSessionStorage({
   cookie: {
-    name: "my_remix_theme",
-    secure: true,
-    secrets: [sessionSecret],
-    sameSite: "lax",
-    path: "/",
+    name: "__session",
     httpOnly: true,
+    path: "/",
+    sameSite: "lax",
+    secrets: [process.env.SESSION_SECRET],
+    secure: process.env.NODE_ENV === "production",
   },
 });
 
-async function getThemeSession(request: Request) {
-  const session = await themeStorage.getSession(request.headers.get("Cookie"));
+export async function getThemeSession(request: Request) {
+  const cookie = request.headers.get("Cookie");
+  const session = await sessionStorage.getSession(cookie);
+
   return {
     getTheme: () => {
       const themeValue = session.get("theme");
       return isTheme(themeValue) ? themeValue : null;
     },
     setTheme: (theme: Theme) => session.set("theme", theme),
-    commit: () => themeStorage.commitSession(session),
+    commit: () => sessionStorage.commitSession(session),
   };
 }
-
-export { getThemeSession };

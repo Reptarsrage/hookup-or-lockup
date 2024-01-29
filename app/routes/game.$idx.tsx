@@ -1,5 +1,4 @@
-import type { HeadersFunction, LoaderArgs } from "@remix-run/node";
-import type { V2_ErrorBoundaryComponent } from "@remix-run/server-runtime/dist/routeModules";
+import type { HeadersFunction, LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import {
   Outlet,
@@ -8,17 +7,17 @@ import {
   useRouteError,
 } from "@remix-run/react";
 
-import type { Page } from "~/models/post.server";
-import { getPosts } from "~/models/post.server";
-import ErrorElt from "~/components/Error";
-import NotFound from "~/components/NotFound";
 import cache from "~/cache";
-import { Theme, useTheme } from "~/themeProvider";
-import SunIcon from "~/components/icons/Sun";
+import ErrorElt from "~/components/Error";
 import MoonIcon from "~/components/icons/Moon";
+import SunIcon from "~/components/icons/Sun";
+import NotFound from "~/components/NotFound";
 import Number from "~/components/Number";
+import { Theme, useTheme } from "~/context/themeProvider";
 import useRouteIndex from "~/hooks/useRouteIndex";
 import useScore from "~/hooks/useScore";
+import { getPosts } from "~/models/post.server";
+import type { Page } from "~/models/post.server";
 
 export const headers: HeadersFunction = () => ({
   "Cache-Control": "max-age=300, s-maxage=3600",
@@ -35,7 +34,7 @@ const PAGE_SIZE = 10;
  * @param args - loader arguments
  * @returns - loader data
  */
-export async function loader({ params }: LoaderArgs) {
+export async function loader({ params }: LoaderFunctionArgs) {
   const indexStr = params.idx || "0";
   const index = parseInt(indexStr, 10);
   if (isNaN(index)) {
@@ -56,7 +55,7 @@ export async function loader({ params }: LoaderArgs) {
   });
 }
 
-export const ErrorBoundary: V2_ErrorBoundaryComponent = () => {
+export const ErrorBoundary = () => {
   const error = useRouteError();
   if (isRouteErrorResponse(error) && error.status === 404) {
     return <NotFound />;
@@ -85,6 +84,7 @@ export default function GameLayout() {
   }
 
   const { numberGuessed, numberCorrect, percentCorrect } = useScore();
+
   return (
     <div className="flex flex-auto flex-col items-center justify-center max-h-full overflow-hidden p-4 md:p-8">
       <div className="flex flex-auto flex-col items-center w-full max-w-3xl gap-4 md:gap-8">
@@ -99,16 +99,16 @@ export default function GameLayout() {
           </button>
 
           {/* Tracker */}
-          {numberGuessed > 0 && (
+          {numberGuessed > 0 ? (
             <span>
               Score: <Number value={numberCorrect} /> (
               <Number value={percentCorrect} />
               %)
             </span>
-          )}
+          ) : null}
 
           {/* Counter */}
-          {index !== null && (
+          {index !== null ? (
             <span>
               <b>
                 <Number value={index + 1} />
@@ -118,7 +118,7 @@ export default function GameLayout() {
                 <Number value={total} />
               </b>
             </span>
-          )}
+          ) : null}
         </header>
 
         <Outlet />

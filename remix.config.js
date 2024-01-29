@@ -1,13 +1,6 @@
-/**
- * @type {import('@remix-run/dev').AppConfig}
- */
+/** @type {import('@remix-run/dev').AppConfig} */
 module.exports = {
   cacheDirectory: "./node_modules/.cache/remix",
-  serverDependenciesToBundle: ["axios"],
-  ignoredRouteFiles: ["**/.*", "**/*.css", "**/*.test.{js,jsx,ts,tsx}"],
-  future: {
-    v2_errorBoundary: true,
-    v2_meta: true,
-    v2_normalizeFormMethod: true,
-  },
+  ignoredRouteFiles: ["**/.*", "**/*.test.{ts,tsx}"],
+  serverModuleFormat: "cjs",
 };

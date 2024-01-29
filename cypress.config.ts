@@ -2,15 +2,11 @@ import { defineConfig } from "cypress";
 
 export default defineConfig({
   e2e: {
-    env: {
-      API_BASE_URL: "https://localhost:8080/",
-    },
     setupNodeEvents: (on, config) => {
       const isDev = config.watchForFileChanges;
       const port = process.env.PORT ?? (isDev ? "3000" : "8811");
       const configOverrides: Partial<Cypress.PluginConfigOptions> = {
         baseUrl: `http://localhost:${port}`,
-        video: !process.env.CI,
         screenshotOnRunFailure: !process.env.CI,
       };
 
