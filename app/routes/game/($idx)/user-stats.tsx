@@ -1,31 +1,11 @@
 import { Link, useSearchParams } from "@remix-run/react";
-import { useMemo } from "react";
 import Number from "~/components/Number";
-import useStatsTracker from "~/hooks/useStatsTracker";
+import useScore from "~/hooks/useScore";
 
 export default function UserStatsPage() {
   const [searchParams] = useSearchParams();
   const returnUrl = searchParams.get("returnUrl") || "/game";
-
-  const { stats } = useStatsTracker();
-
-  const { lockups, hookups, averageTimeTaken, percentCorrect } = useMemo(
-    () => ({
-      lockups: stats.filter((stat) => stat.decision === -1).length,
-      hookups: stats.filter((stat) => stat.decision === 1).length,
-      percentCorrect: Math.ceil(
-        (stats.filter((stat) => (stat.decision === -1) === stat.post.lockedUp)
-          .length /
-          stats.length) *
-          100.0,
-      ),
-      averageTimeTaken:
-        stats.reduce((acc, stat) => acc + stat.timeTaken, 0) /
-        stats.length /
-        1000.0,
-    }),
-    [stats],
-  );
+  const { lockups, hookups, averageTimeTaken, percentCorrect } = useScore();
 
   return (
     <>

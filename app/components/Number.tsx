@@ -1,13 +1,27 @@
+import clsx from "clsx";
+import { forwardRef } from "react";
+
 type NumberProps = {
   value: number;
 };
 
-function Number({ value }: NumberProps) {
+const Number = forwardRef<
+  HTMLSpanElement,
+  NumberProps & React.HTMLAttributes<HTMLSpanElement>
+>(function Number({ value, className, ...passThroughProps }, ref) {
   if (typeof value !== "number") {
     return null;
   }
 
-  return <span>{value.toLocaleString()}</span>;
-}
+  if (isNaN(value)) {
+    value = 0;
+  }
+
+  return (
+    <span ref={ref} className={clsx(className)} {...passThroughProps}>
+      {value.toLocaleString()}
+    </span>
+  );
+});
 
 export default Number;

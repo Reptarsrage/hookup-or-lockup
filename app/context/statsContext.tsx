@@ -1,16 +1,28 @@
-import { useMemo, useState } from "react";
+import { createContext, useState } from "react";
 import superjson from "superjson";
 import type { PostWithImageAndStats } from "~/models/post.server";
 
 type Decision = 1 | -1;
 
-type Stats = {
+export type Stats = {
   post: PostWithImageAndStats;
   decision: Decision;
   timeTaken: number;
 };
 
-export default function useStatsTracker() {
+export const StatsContext = createContext<{
+  stats: Stats[];
+  recordStats: (stat: Stats) => void;
+  clearStats: () => void;
+}>({
+  stats: [],
+  recordStats: () => {},
+  clearStats: () => {},
+});
+
+const StatsProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   function getStatsList(): Stats[] {
     if (typeof window === "undefined") {
       // session storage is not available on the server
@@ -28,7 +40,7 @@ export default function useStatsTracker() {
   const [stats, setStats] = useState<Stats[]>(getStatsList());
 
   function recordStats(stat: Stats) {
-    const newStats = stats.concat(stat);
+    const newStats = [...stats].concat(stat);
     window.sessionStorage.setItem("stats", superjson.stringify(newStats));
     setStats(newStats);
   }
@@ -38,5 +50,11 @@ export default function useStatsTracker() {
     setStats([]);
   }
 
-  return useMemo(() => ({ stats, recordStats, clearStats }), [stats]);
-}
+  return (
+    <StatsContext.Provider value={{ stats, recordStats, clearStats }}>
+      {children}
+    </StatsContext.Provider>
+  );
+};
+
+export default StatsProvider;

@@ -1,9 +1,10 @@
 import { Link, useNavigate } from "@remix-run/react";
-import useStatsTracker from "~/hooks/useStatsTracker";
+import { useContext } from "react";
+import { StatsContext } from "~/context/statsContext";
 
 export default function GameOverPage() {
   const navigate = useNavigate();
-  const { clearStats } = useStatsTracker();
+  const { clearStats } = useContext(StatsContext);
 
   function startOver() {
     clearStats();

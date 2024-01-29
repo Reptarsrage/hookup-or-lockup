@@ -18,6 +18,7 @@ import SunIcon from "~/components/icons/Sun";
 import MoonIcon from "~/components/icons/Moon";
 import Number from "~/components/Number";
 import useRouteIndex from "~/hooks/useRouteIndex";
+import useScore from "~/hooks/useScore";
 
 export const headers: HeadersFunction = () => ({
   "Cache-Control": "max-age=300, s-maxage=3600",
@@ -83,6 +84,7 @@ export default function GameLayout() {
     );
   }
 
+  const { numberGuessed, numberCorrect, percentCorrect } = useScore();
   return (
     <div className="flex flex-auto flex-col items-center justify-center max-h-full overflow-hidden p-4 md:p-8">
       <div className="flex flex-auto flex-col items-center w-full max-w-3xl gap-4 md:gap-8">
@@ -95,6 +97,15 @@ export default function GameLayout() {
               <SunIcon className="inline h-8 w-8" />
             )}
           </button>
+
+          {/* Tracker */}
+          {numberGuessed > 0 && (
+            <span>
+              Score: <Number value={numberCorrect} /> (
+              <Number value={percentCorrect} />
+              %)
+            </span>
+          )}
 
           {/* Counter */}
           {index !== null && (

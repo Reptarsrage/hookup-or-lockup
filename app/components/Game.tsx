@@ -17,38 +17,42 @@ function MobileCard({ post }: { post: PostWithImageAndStats }) {
   const [flipped, flip] = useToggle(false, true);
 
   return (
-    <div
-      data-testid="card"
-      className="bg-pink dark:bg-blue-dark aspect-h-card text-red-dark dark:text-blue-lighter w-full max-w-xs flex flex-col rounded-xl shadow-2xl overflow-hidden"
-      onClick={flip}
-    >
-      <div
-        className="flex flex-col flex-auto overflow-hidden relative bg-cover bg-top bg-no-repeat"
-        style={{
-          backgroundImage: flipped ? undefined : `url("${post.image}")`,
-        }}
-      >
-        <h1
-          className={clsx(
-            "px-4 py-2 text-5xl font-bold",
-            !flipped &&
-              "absolute bottom-0 left-0 w-full bg-gradient-to-t from-red-darker text-pink-light dark:from-blue-dark dark:text-blue-lighter",
-          )}
+    <div className="relative flex-auto w-full">
+      <div className="absolute top-0 left-0 w-full h-full flex justify-center">
+        <div
+          data-testid="card"
+          className="bg-pink dark:bg-blue-dark text-red-dark dark:text-blue-lighter flex flex-col rounded-xl shadow-2xl overflow-hidden w-full"
+          onClick={flip}
         >
-          {post.title}
-        </h1>
-        <p
-          className={clsx(
-            "flex-1 overflow-auto p-4",
-            !flipped && "invisible p-0",
-          )}
-        >
-          {post.description}
-        </p>
-      </div>
+          <div
+            className="flex flex-col flex-auto overflow-hidden relative bg-cover bg-top bg-no-repeat"
+            style={{
+              backgroundImage: flipped ? undefined : `url("${post.image}")`,
+            }}
+          >
+            <h1
+              className={clsx(
+                "px-4 py-2 text-5xl font-bold",
+                !flipped &&
+                  "absolute bottom-0 left-0 w-full bg-gradient-to-t from-red-darker text-pink-light dark:from-blue-dark dark:text-blue-lighter",
+              )}
+            >
+              {post.title}
+            </h1>
+            <p
+              className={clsx(
+                "flex-1 overflow-auto p-4",
+                !flipped && "invisible p-0",
+              )}
+            >
+              {post.description}
+            </p>
+          </div>
 
-      <div className="flex justify-end p-1 px-2 opacity-70">
-        <em>Tap to see {flipped ? "picture" : "description"}</em>
+          <div className="flex justify-end p-1 px-2 opacity-70">
+            <em>Tap to see {flipped ? "picture" : "description"}</em>
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -84,6 +88,7 @@ function DesktopCard({ post }: { post: PostWithImageAndStats }) {
 export default function Game({ onDecisionMade, post }: GameProps) {
   const [interactable] = useState(true);
   const isDesktop = useMediaQuery("only screen and (min-width: 768px)");
+  const isLandscape = useMediaQuery("only screen and (orientation:landscape)");
 
   function ohNo() {
     onDecisionMade(-1);
@@ -97,8 +102,12 @@ export default function Game({ onDecisionMade, post }: GameProps) {
 
   return (
     <>
-      <main className="flex flex-1 flex-col gap-4 md:gap-8 items-center">
-        {isDesktop ? <DesktopCard post={post} /> : <MobileCard post={post} />}
+      <main className="flex flex-1 flex-col gap-4 md:gap-8 items-center w-full">
+        {isDesktop || isLandscape ? (
+          <DesktopCard post={post} />
+        ) : (
+          <MobileCard post={post} />
+        )}
 
         {/* Buttons */}
         <div className="flex w-full items-center justify-evenly gap-4 md:gap-8 md:p-4 max-w-3xl">

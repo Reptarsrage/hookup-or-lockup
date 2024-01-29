@@ -20,9 +20,9 @@ test("displays localized zero", async () => {
   expect(number).toBeInTheDocument();
 });
 
-test("displays localized NaN", async () => {
+test("displays NaN as zero", async () => {
   render(<Number value={NaN} />);
-  const number = await screen.findByText("NaN");
+  const number = await screen.findByText("0");
   expect(number).toBeInTheDocument();
 });
 

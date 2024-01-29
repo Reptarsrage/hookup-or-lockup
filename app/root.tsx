@@ -23,6 +23,7 @@ import {
   useTheme,
 } from "./themeProvider";
 import clsx from "clsx";
+import StatsProvider from "./context/statsContext";
 
 export type LoaderData = {
   theme: Theme | null;
@@ -85,7 +86,9 @@ export default function AppWithProviders() {
 
   return (
     <ThemeProvider specifiedTheme={data.theme}>
-      <App />
+      <StatsProvider>
+        <App />
+      </StatsProvider>
     </ThemeProvider>
   );
 }

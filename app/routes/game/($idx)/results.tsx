@@ -4,9 +4,6 @@ import { useWindowSize } from "@react-hook/window-size";
 import { Link, useLocation, useSearchParams } from "@remix-run/react";
 import { redirect } from "@remix-run/server-runtime";
 import useRouteIndex from "~/hooks/useRouteIndex";
-import useStatsTracker from "~/hooks/useStatsTracker";
-import Number from "~/components/Number";
-import { useMemo } from "react";
 import useParentData from "~/hooks/useParentData";
 
 type Undecided = 0;
@@ -23,18 +20,6 @@ export default function ResultsPage() {
   const { posts } = useParentData();
   const index = useRouteIndex();
 
-  const { stats } = useStatsTracker();
-  const percentCorrect = useMemo(
-    () =>
-      Math.ceil(
-        (stats.filter((stat) => (stat.decision === -1) === stat.post.lockedUp)
-          .length /
-          stats.length) *
-          100.0,
-      ),
-    [stats],
-  );
-
   if (decision === 0) {
     return redirect("/game/0");
   }
@@ -47,6 +32,8 @@ export default function ResultsPage() {
   const choseLockedUp = decision === -1;
   const isCorrect = choseLockedUp === post.lockedUp;
   const returnUrl = `${location.pathname}${location.search}`;
+  const smashP = Math.ceil((post.smashes / post.totalVotes) * 100);
+  const passP = 100 - smashP;
 
   return (
     <>
@@ -79,14 +66,37 @@ export default function ResultsPage() {
         </h3>
       </main>
 
-      <section className="flex w-full items-center justify-center rounded-2xl bg-gray-light p-4">
-        <span className="text-gray-dark">
-          So far you got{" "}
-          <b>
-            <Number value={percentCorrect} />% correct!
-          </b>
-        </span>
-      </section>
+      <div className="flex w-full items-center justify-center rounded-2xl bg-gray-light overflow-hidden">
+        {smashP > 0 && (
+          <div
+            className="bg-blue-light w-full h-10 flex items-center justify-start px-4"
+            style={{
+              width: `${smashP}%`,
+            }}
+          >
+            {passP <= smashP && (
+              <span className="text-white whitespace-nowrap overflow-hidden">
+                {smashP}% Chose to lockup
+              </span>
+            )}
+          </div>
+        )}
+
+        {passP > 0 && (
+          <div
+            className="bg-pink w-full h-10 flex justify-end items-center px-4"
+            style={{
+              width: `${passP}%`,
+            }}
+          >
+            {passP > smashP && (
+              <span className="text-white whitespace-nowrap overflow-hidden">
+                {passP}% Chose to hookup
+              </span>
+            )}
+          </div>
+        )}
+      </div>
 
       <footer className="flex w-full flex-row justify-between gap-4 md:gap-8">
         <Link
