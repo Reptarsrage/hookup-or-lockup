@@ -35,10 +35,12 @@ function ConfirmModal({
       {modalTransitions(
         (style, item) =>
           item && (
-            <animated.div
-              style={style}
-              className="bg-[rgba(0, 0, 0, 0.4)] fixed top-0 left-0 h-full w-full  z-20 backdrop-blur-md"
-            />
+            <>
+              <animated.div
+                style={style}
+                className="bg-black bg-opacity-50 fixed top-0 left-0 h-full w-full z-20 backdrop-blur-md"
+              />
+            </>
           ),
       )}
 

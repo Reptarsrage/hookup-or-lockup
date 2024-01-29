@@ -1,4 +1,5 @@
 import { useFetcher, useNavigate } from "@remix-run/react";
+import { redirect } from "@remix-run/server-runtime";
 import { useState } from "react";
 
 import ConfirmModal from "~/components/ConfirmModal";
@@ -15,10 +16,9 @@ export default function GamePage() {
 
   const navigate = useNavigate();
 
-  const { total, posts } = useParentData();
+  const { posts } = useParentData();
 
   const index = useRouteIndex();
-  const post = posts[index % posts.length];
 
   const [decision, setDecision] = useState<Decision | Undecided>(0);
   const [showConfirm, setShowConfirm] = useState(false);
@@ -34,7 +34,7 @@ export default function GamePage() {
   async function onConfirmed(confirmed: boolean) {
     setShowConfirm(false);
 
-    if (!confirmed || decision === 0) {
+    if (!confirmed || decision === 0 || index === null) {
       return;
     }
 
@@ -46,7 +46,7 @@ export default function GamePage() {
       {
         method: "patch",
         action,
-      }
+      },
     );
 
     // Update post stats
@@ -68,9 +68,15 @@ export default function GamePage() {
     // attempt to give time for the stats to be recorded
     setTimeout(
       () => navigate(`/game/${index}/results?decision=${decision}`),
-      100
+      100,
     );
   }
+
+  if (index === null) {
+    return redirect("/game/0");
+  }
+
+  const post = posts[index % posts.length];
 
   return (
     <>
@@ -81,12 +87,7 @@ export default function GamePage() {
         post={post}
       />
 
-      <Game
-        index={index}
-        total={total}
-        onDecisionMade={onDecisionMade}
-        post={post}
-      />
+      <Game onDecisionMade={onDecisionMade} post={post} />
     </>
   );
 }

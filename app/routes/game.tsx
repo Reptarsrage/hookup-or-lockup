@@ -8,10 +8,16 @@ import {
   useRouteError,
 } from "@remix-run/react";
 
+import type { Page } from "~/models/post.server";
 import { getPosts } from "~/models/post.server";
 import ErrorElt from "~/components/Error";
 import NotFound from "~/components/NotFound";
 import cache from "~/cache";
+import { Theme, useTheme } from "~/themeProvider";
+import SunIcon from "~/components/icons/Sun";
+import MoonIcon from "~/components/icons/Moon";
+import Number from "~/components/Number";
+import useRouteIndex from "~/hooks/useRouteIndex";
 
 export const headers: HeadersFunction = () => ({
   "Cache-Control": "max-age=300, s-maxage=3600",
@@ -67,11 +73,45 @@ export const ErrorBoundary: V2_ErrorBoundaryComponent = () => {
 };
 
 export default function GameLayout() {
-  useLoaderData<typeof loader>(); // used in child routes
+  const { total } = useLoaderData<typeof loader>() as Page;
+  const index = useRouteIndex();
+  const [theme, setTheme] = useTheme();
+
+  function toggleTheme() {
+    setTheme((prevTheme) =>
+      prevTheme === Theme.LIGHT ? Theme.DARK : Theme.LIGHT,
+    );
+  }
 
   return (
     <div className="flex flex-auto flex-col items-center justify-center max-h-full overflow-hidden p-4 md:p-8">
-      <Outlet />
+      <div className="flex flex-auto flex-col items-center w-full max-w-3xl gap-4 md:gap-8">
+        <header className="flex w-full justify-between text-xl text-pink-light dark:text-blue-lighter md:text-center">
+          {/* Theme toggle */}
+          <button onClick={toggleTheme}>
+            {theme === Theme.DARK ? (
+              <MoonIcon className="inline h-8 w-8" />
+            ) : (
+              <SunIcon className="inline h-8 w-8" />
+            )}
+          </button>
+
+          {/* Counter */}
+          {index !== null && (
+            <span>
+              <b>
+                <Number value={index + 1} />
+              </b>
+              {" of "}
+              <b>
+                <Number value={total} />
+              </b>
+            </span>
+          )}
+        </header>
+
+        <Outlet />
+      </div>
     </div>
   );
 }

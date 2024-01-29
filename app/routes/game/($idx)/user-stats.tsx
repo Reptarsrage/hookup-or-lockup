@@ -28,8 +28,8 @@ export default function UserStatsPage() {
   );
 
   return (
-    <div className="flex w-full max-w-xl flex-col items-center justify-center gap-4 md:gap-8">
-      <main className="flex w-full flex-col items-center justify-center overflow-hidden rounded-2xl bg-white p-4 shadow-lg md:max-w-xl md:p-8">
+    <>
+      <main className="flex w-full flex-col items-center justify-center overflow-hidden rounded-2xl bg-white p-4 md:p-8">
         <h1 className="mb-2 font-sans text-3xl font-bold uppercase text-black">
           Your Statistics
         </h1>
@@ -95,6 +95,6 @@ export default function UserStatsPage() {
           Continue
         </Link>
       </footer>
-    </div>
+    </>
   );
 }

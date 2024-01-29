@@ -7,7 +7,7 @@ export default function GameOverPage() {
 
   function startOver() {
     clearStats();
-    navigate("/game");
+    navigate("/game/0");
   }
 
   return (

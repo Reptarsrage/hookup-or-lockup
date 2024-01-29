@@ -75,7 +75,7 @@ export default function Index() {
     // If the user is on the last slide, navigate to the game
     if (index + 1 >= slides.length) {
       setDisabled(true);
-      navigate("/game");
+      navigate("/game/0");
       return;
     }
 

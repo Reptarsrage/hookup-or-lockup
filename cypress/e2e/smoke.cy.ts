@@ -27,7 +27,7 @@ describe("smoke tests", () => {
   });
 
   it("should show game page elements", () => {
-    cy.visitAndCheck("/game");
+    cy.visitAndCheck("/game/0");
 
     cy.findByTestId("card");
     cy.findByTestId("oh-no");

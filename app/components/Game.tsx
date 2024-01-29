@@ -3,19 +3,13 @@ import useToggle from "@react-hook/toggle";
 import { useMediaQuery } from "@react-hook/media-query";
 
 import type { PostWithImageAndStats } from "~/models/post.server";
-import Number from "~/components/Number";
 import { AyYo, OhNo } from "~/components/icons";
-import SunIcon from "~/components/icons/Sun";
-import MoonIcon from "~/components/icons/Moon";
-import { useTheme, Theme } from "~/themeProvider";
 import clsx from "clsx";
 
 type Decision = -1 | 1;
 
 type GameProps = {
   post: PostWithImageAndStats;
-  index: number;
-  total: number;
   onDecisionMade: (decision: Decision) => void;
 };
 
@@ -87,14 +81,8 @@ function DesktopCard({ post }: { post: PostWithImageAndStats }) {
   );
 }
 
-export default function Game({
-  onDecisionMade,
-  post,
-  index,
-  total,
-}: GameProps) {
+export default function Game({ onDecisionMade, post }: GameProps) {
   const [interactable] = useState(true);
-  const [theme, setTheme] = useTheme();
   const isDesktop = useMediaQuery("only screen and (min-width: 768px)");
 
   function ohNo() {
@@ -105,38 +93,10 @@ export default function Game({
     onDecisionMade(1);
   }
 
-  function toggleTheme() {
-    setTheme((prevTheme) =>
-      prevTheme === Theme.LIGHT ? Theme.DARK : Theme.LIGHT,
-    );
-  }
-
   // TODO: Loading skeleton
 
   return (
     <>
-      <header className="flex w-full justify-between text-xl text-pink-light dark:text-blue-lighter md:text-center mb-4 md:mb-8 max-w-3xl">
-        {/* Theme toggle */}
-        <button onClick={toggleTheme}>
-          {theme === Theme.DARK ? (
-            <MoonIcon className="inline h-8 w-8" />
-          ) : (
-            <SunIcon className="inline h-8 w-8" />
-          )}
-        </button>
-
-        {/* Counter */}
-        <span>
-          <b>
-            <Number value={index + 1} />
-          </b>
-          {" of "}
-          <b>
-            <Number value={total} />
-          </b>
-        </span>
-      </header>
-
       <main className="flex flex-1 flex-col gap-4 md:gap-8 items-center">
         {isDesktop ? <DesktopCard post={post} /> : <MobileCard post={post} />}
 
