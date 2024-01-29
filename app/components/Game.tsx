@@ -115,7 +115,7 @@ export default function Game({
 
   return (
     <>
-      <header className="flex w-full justify-between text-xl text-pink-light dark:text-blue-lighter md:text-center mb-4 md:mb-8">
+      <header className="flex w-full justify-between text-xl text-pink-light dark:text-blue-lighter md:text-center mb-4 md:mb-8 max-w-3xl">
         {/* Theme toggle */}
         <button onClick={toggleTheme}>
           {theme === Theme.DARK ? (
