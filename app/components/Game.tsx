@@ -16,44 +16,71 @@ interface GameProps {
 function MobileCard({ post }: { post: PostWithImageAndStats }) {
   const [flipped, flip] = useToggle(false, true);
 
+  function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
+    if (event.key === "Enter") {
+      flip();
+    }
+  }
+
   return (
     <div className="relative flex-auto w-full">
       <div className="absolute top-0 left-0 w-full h-full flex justify-center">
         <div
           data-testid="card"
-          className="bg-pink dark:bg-blue-dark text-red-dark dark:text-blue-lighter flex flex-col rounded-xl shadow-2xl overflow-hidden w-full"
-          onClick={flip}
-          onKeyDown={flip}
-          tabIndex={0}
-          role="button"
+          className=" flex flex-col bg-transparent aspect-h-card max-w-full max-h-full w-full h-full"
+          style={{ perspective: "1000px" }}
         >
           <div
-            className="flex flex-col flex-auto overflow-hidden relative bg-cover bg-top bg-no-repeat"
+            className={clsx("relative w-full h-full")}
+            onClick={flip}
+            onKeyDown={handleKeyDown}
+            tabIndex={0}
+            role="button"
             style={{
-              backgroundImage: flipped ? undefined : `url("${post.image}")`,
+              transformStyle: "preserve-3d",
+              transform: flipped ? "rotateY(180deg)" : "rotateY(0deg)",
+              transition: "transform 150ms",
             }}
           >
-            <h1
-              className={clsx(
-                "px-4 py-2 text-5xl font-bold",
-                !flipped &&
-                  "absolute bottom-0 left-0 w-full bg-gradient-to-t from-red-darker text-pink-light dark:from-blue-dark dark:text-blue-lighter",
-              )}
+            {/* Front */}
+            <div
+              className="flex flex-col absolute w-full h-full bg-pink dark:bg-blue-dark text-red-dark dark:text-blue-lighter rounded-xl shadow-2xl overflow-hidden"
+              style={{ backfaceVisibility: "hidden" }}
             >
-              {post.title}
-            </h1>
-            <p
-              className={clsx(
-                "flex-1 overflow-auto p-4",
-                !flipped && "invisible p-0",
-              )}
-            >
-              {post.description}
-            </p>
-          </div>
+              <div
+                className="flex flex-col flex-auto overflow-hidden relative bg-cover bg-top bg-no-repeat"
+                style={{ backgroundImage: `url("${post.image}")` }}
+              >
+                <h1 className="px-4 py-2 text-5xl font-bold absolute bottom-0 left-0 w-full bg-gradient-to-t from-red-darker text-pink-light dark:from-blue-dark dark:text-blue-lighter">
+                  {post.title}
+                </h1>
+              </div>
 
-          <div className="flex justify-end p-1 px-2 opacity-70">
-            <em>Tap to see {flipped ? "picture" : "description"}</em>
+              <div
+                className="flex justify-end p-1 px-2 opacity-70"
+                style={{ boxShadow: "inset 0 7px 9px -7px rgba(0,0,0,0.4)" }}
+              >
+                <em>Tap to see {flipped ? "picture" : "description"}</em>
+              </div>
+            </div>
+
+            {/* Back */}
+            <div
+              className="flex flex-col absolute w-full h-full bg-pink dark:bg-blue-dark text-red-dark dark:text-blue-lighter rounded-xl shadow-2xl overflow-hidden"
+              style={{
+                backfaceVisibility: "hidden",
+                transform: "rotateY(180deg)",
+              }}
+            >
+              <h1 className="px-4 py-2 text-5xl font-bold">{post.title}</h1>
+              <p className="overflow-auto p-4 flex-1">{post.description}</p>
+              <div
+                className="flex justify-end p-1 px-2 opacity-70"
+                style={{ boxShadow: "inset 0 7px 9px -7px rgba(0,0,0,0.4)" }}
+              >
+                <em>Tap to see {flipped ? "picture" : "description"}</em>
+              </div>
+            </div>
           </div>
         </div>
       </div>
