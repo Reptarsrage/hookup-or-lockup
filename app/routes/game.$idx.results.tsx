@@ -64,7 +64,7 @@ export default function ResultsPage() {
 
         <h3 className="text-2xl font-bold text-red-dark">{post.title}</h3>
         <h3 className="text-2xl text-gray">
-          is {post.lockedUp ? " not in " : " in "}
+          is {post.lockedUp ? " in " : " not in "}
           <b className="uppercase text-blue-dark">Jail</b>
         </h3>
       </main>
