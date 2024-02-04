@@ -1,7 +1,7 @@
-import "dotenv/config";
 import { createCookieSessionStorage } from "@remix-run/node";
 import invariant from "tiny-invariant";
 
+import "./db.server"; // NOTE: This for whatever reason sets up env vars correctly
 import { isTheme, type Theme } from "./context/themeProvider";
 
 invariant(process.env.SESSION_SECRET, "SESSION_SECRET must be set");
